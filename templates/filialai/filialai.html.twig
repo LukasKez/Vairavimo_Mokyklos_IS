@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Filialai{% endblock %}
+
+{% block body %}
+    <h1>Filialų sąrašas:</h1>
+    <a href="{{ path('app_filialaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti filialą</a>
+    <table class="table">
+        <tr>
+            <th>Filialas</th>
+            <th>Adresas</th>
+            <th>Funkcijos</th>
+        </tr>
+        <tr>
+            <td>Filialas 1</td>
+            <td>Adresas 1</td>
+            <td>
+                <a href="{{ path('app_filialaiMarsrutai') }}" class="btn btn-success">Peržiūrėti maršrutus</a>
+                <a href="{{ path('app_filialaiInstruktoriai') }}" class="btn btn-success">Peržiūrėti darbuotojus</a>
+                <a href="{{ path('app_filialaiRedaguoti') }}" class="btn btn-primary">Redaguoti</a>
+                <a href="{{ path('app_filialaiIstrinti') }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
+            </td>
+        </tr>
+        <tr>
+            <td>Filialas 2</td>
+            <td>Adresas 2</td>
+            <td>
+                <a href="#" class="btn btn-success">Peržiūrėti maršrutus</a>
+                <a href="#" class="btn btn-success">Peržiūrėti darbuotojus</a>
+                <a href="#" class="btn btn-primary">Redaguoti</a>
+                <a href="#" class="btn btn-danger">Ištrinti</a>
+            </td>
+        </tr>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+<script>
+    $(document).ready(function () {
+        $('.js-delete-btn').on('click', function () {
+            return confirm('Ar tikrai norite istrinti filiala?');
+        });
+    });
+</script>
+{% endblock %}
