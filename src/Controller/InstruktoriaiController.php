@@ -8,6 +8,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class InstruktoriaiController extends AbstractController
 {
+    /**
+     * @Route("/instruktoriai", name="app_instruktoriai")
+     */
     public function index()
     {
         return $this->render('instruktoriai/instruktoriai.html.twig', [

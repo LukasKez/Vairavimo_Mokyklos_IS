@@ -8,6 +8,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AutomobiliaiController extends AbstractController
 {
+    /**
+     * @Route("/automobiliai", name="app_automobiliai")
+     */
     public function index()
     {
         return $this->render('automobiliai/automobiliai.html.twig', [
@@ -35,7 +38,7 @@ class AutomobiliaiController extends AbstractController
         ]);
     }
 	
-	    /**
+    /**
      * @Route("/automobiliai/keistiFiliala", name="app_automobiliaiFilialai")
      */
     public function changeBranch()
@@ -44,8 +47,8 @@ class AutomobiliaiController extends AbstractController
         'purpose' => 'Keisti filiala',
         ]);
     }
-	
-	    /**
+
+    /**
      * @Route("/automobiliai/vieta", name="app_automobiliaiVieta")
      */
     public function changeCondition()
