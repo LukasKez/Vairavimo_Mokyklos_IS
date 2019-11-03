@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello KlientaiController!{% endblock %}
+
+{% block body %}
+<h1>Klientų sąrašas:</h1>
+<a href="{{ path('app_klientaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti klientą</a>
+<table class="table">
+    <tr>
+        <th>Klientas</th>
+        <th>Funkcijos</th>
+    </tr>
+    <tr>
+        <td>Aidas Bieliauskas </td>
+        <td>
+            <a href="{{ path('app_klientaiProfilis') }}" class="btn btn-success">Peržiūrėti profilį</a>
+            <a href="{{ path('app_klientaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
+            <a href="{{ path('app_klientaiRedaguoti') }}" class="btn btn-primary">Redaguoti</a>
+            <a href="{{ path('app_klientaiIstrinti') }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
+            <a href="{{ path('app_klientaiEgzaminai') }}" class="btn btn-success">Pasirinkti egzaminą</a>
+        </td>
+    </tr>
+
+    {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        <script>
+            $(document).ready(function () {
+                $('.js-delete-btn').on('click', function () {
+                    return confirm('Ar tikrai norite ištrinti klientą?');
+                });
+            });
+        </script>
+{% endblock %}
