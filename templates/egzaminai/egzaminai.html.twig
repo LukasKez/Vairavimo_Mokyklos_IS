@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Egzaminai{% endblock %}
+
+{% block body %}
+    <h1>Egzaminų sąrašas:</h1>
+    <a href="{{ path('app_perziuretiVidurki') }}" class="btn btn-primary my-1 float-right">Peržiūrėti bendrą vidurkį</a>
+    <table class="table">
+        <tr>
+            <th>Nr</th>
+            <th>Tipas</th>
+            <th>Laikas</th>
+            <th>Adresas</th>
+            <th>Funkcijos</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Teorijos egzaminas</td>
+            <td>2019-12-02 10:30</td>
+            <td>Raudondvario pl. 234b, Kaunas</td>
+            <td>
+                <a href="{{ path('app_perziuretiRezultatus') }}" class="btn btn-success">Peržiūrėti rezultatus</a>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Vairavimo egzaminas</td>
+            <td>2019-12-02 10:30</td>
+            <td>Raudondvario pl. 234b, Kaunas</td>
+            <td>
+                <a href="{{ path('app_perziuretiRezultatus') }}" class="btn btn-success">Peržiūrėti rezultatus</a>
+            </td>
+        </tr>
+    </table>
+
+{% endblock %}

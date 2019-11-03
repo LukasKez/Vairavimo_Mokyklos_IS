@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taisyklės{% endblock %}
+
+{% block body %}
+    <h1>Taisyklės</h1>
+
+    <div>
+        <button class="btn btn-link" data-toggle="collapse" 
+        href="#collapseRules1" aria-expanded="false" 
+        aria-controls="collapseRules1">
+            Teorijos egzamino taisyklės
+        </button>
+    </div>
+    <div class="collapse" id="collapseRules1">
+        <div>
+            <ul> 
+                <li> Taisyklė nr. 1 </li>
+                <li> Taisyklė nr. 2 </li>
+                <li> Taisyklė nr. 3 </li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-link" type="button" data-toggle="collapse" 
+        data-target="#collapseRules2" aria-expanded="false" 
+        aria-controls="collapseRules2">
+            Vairavimo egzamino taisyklės
+        </button>
+    </div>
+    <div class="collapse" id="collapseRules2">
+        <div>
+            <ul> 
+                <li> Taisyklė nr. 1 </li>
+                <li> Taisyklė nr. 2 </li>
+                <li> Taisyklė nr. 3 </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
