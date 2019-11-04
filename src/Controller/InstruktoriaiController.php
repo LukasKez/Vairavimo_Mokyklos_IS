@@ -74,14 +74,33 @@ class InstruktoriaiController extends AbstractController
     }
 
     /**
-     * @Route("/instruktoriai/filialoID", name="app_instruktoriaiTvarkarastis")
+     * @Route("/instruktoriai/tvarkarastis", name="app_instruktoriaiTvarkarastis")
      */
     public function tvarkarastis()
     {
-
-
         return $this->render('instruktoriai/tvarkarastis.html.twig', [
 
         ]);
     }
+
+    /**
+     * @Route("/instruktoriai/tvarkarastis/redaguoti", name="app_instruktoriaiRedaguotiTvarkarasti")
+     */
+    public function tvarkarastisRedaguoti()
+    {
+        return $this->render('instruktoriai/tvarkarastis-redaguoti.html.twig', [
+
+        ]);
+    }
+
+    /**
+     * @Route("/instruktoriai/alga", name="app_instruktoriaiAlga")
+     */
+    public function skaiciuotiAlga()
+    {
+        return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
+
+        ]);
+    }
+
 }

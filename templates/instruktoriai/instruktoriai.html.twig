@@ -5,6 +5,7 @@
 {% block body %}
     <h1>Instruktorių sąrašas:</h1>
     <a href="{{ path('app_instruktoriaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti Instruktorių</a>
+    <a href="{{ path('app_instruktoriaiAlga') }}" class="btn btn-success my-1 float-right">Skaičiuoti algą</a>
     <table class="table">
         <tr>
             <th>Instruktorius</th>
@@ -22,10 +23,10 @@
         <tr>
             <td>Lukas Bimkus</td>
             <td>
-                <a href="#" class="btn btn-success">Peržiūrėti profilį</a>
-                <a href="#" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
-                <a href="#" class="btn btn-primary">Redaguoti</a>
-                <a href="#" class="btn btn-danger">Ištrinti</a>
+                <a href="{{ path('app_instruktoriaiProfilis') }}" class="btn btn-success">Peržiūrėti profilį</a>
+                <a href="{{ path('app_instruktoriaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
+                <a href="{{ path('app_instruktoriaiRedaguoti') }}" class="btn btn-primary">Redaguoti</a>
+                <a href="{{ path('app_instruktoriaiIstrinti') }}" class="btn btn-danger">Ištrinti</a>
             </td>
         </tr>
     </table>

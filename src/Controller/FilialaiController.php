@@ -62,13 +62,13 @@ class FilialaiController extends AbstractController
     }
 
     /**
-     * @Route("/instruktoriai/filialoID", name="app_filialaiInstruktoriai")
+     * @Route("/filialai/instruktoriai", name="app_filialoInstruktoriai")
      */
     public function employees()
     {
 
 
-        return $this->render('instruktoriai/instruktoriai.html.twig', [
+        return $this->render('filialai/filialo-instruktoriai.html.twig', [
 
         ]);
     }
