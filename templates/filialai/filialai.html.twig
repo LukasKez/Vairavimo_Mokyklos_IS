@@ -5,43 +5,39 @@
 {% block body %}
     <h1>Filialų sąrašas:</h1>
     <a href="{{ path('app_filialaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti filialą</a>
-    <table class="table">
+    <table class="table table-hover">
         <tr>
             <th>Filialas</th>
             <th>Adresas</th>
-            <th>Funkcijos</th>
+            <th>Miestas</th>
+            <th>Telefonas</th>
+            <th></th>
         </tr>
-        <tr>
-            <td>Filialas 1</td>
-            <td>Adresas 1</td>
-            <td>
-                <a href="{{ path('app_filialaiMarsrutai') }}" class="btn btn-success">Peržiūrėti maršrutus</a>
-                <a href="{{ path('app_filialoInstruktoriai') }}" class="btn btn-success">Peržiūrėti darbuotojus</a>
-                <a href="{{ path('app_filialaiRedaguoti') }}" class="btn btn-primary">Redaguoti</a>
-                <a href="{{ path('app_filialaiIstrinti') }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
-            </td>
-        </tr>
-        <tr>
-            <td>Filialas 2</td>
-            <td>Adresas 2</td>
-            <td>
-                <a href="{{ path('app_filialaiMarsrutai') }}" class="btn btn-success">Peržiūrėti maršrutus</a>
-                <a href="{{ path('app_filialoInstruktoriai') }}" class="btn btn-success">Peržiūrėti darbuotojus</a>
-                <a href="{{ path('app_filialaiRedaguoti') }}" class="btn btn-primary">Redaguoti</a>
-                <a href="{{ path('app_filialaiIstrinti') }}" class="btn btn-danger">Ištrinti</a>
-            </td>
-        </tr>
+        {% for filialas in filialai %}
+            <tr>
+                <td>{{ filialas.pavadinimas }}</td>
+                <td>{{ filialas.adresas }}</td>
+                <td>{{ filialas.miestas.pavadinimas }}</td>
+                <td>{{ filialas.telefonoNumeris }}</td>
+                <td>
+                    <a href="{{ path('app_filialaiMarsrutai') }}" class="btn btn-sm btn-success">Maršrutai</a>
+                    <a href="{{ path('app_filialoInstruktoriai') }}" class="btn btn-sm btn-success">Darbuotojai</a>
+                    <a href="{{ path('app_filialaiRedaguoti') }}" class="btn btn-sm btn-primary">Redaguoti</a>
+                    <a href="{{ path('app_filialaiIstrinti') }}" class="btn btn-sm btn-danger js-delete-btn">Ištrinti</a>
+                </td>
+            </tr>
+        {% endfor %}
     </table>
 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-<script>
-    $(document).ready(function () {
-        $('.js-delete-btn').on('click', function () {
-            return confirm('Ar tikrai norite istrinti filiala?');
+    <script>
+        $(document).ready(function () {
+            $('.js-delete-btn').on('click', function () {
+                return confirm('Ar tikrai norite istrinti filiala?');
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}

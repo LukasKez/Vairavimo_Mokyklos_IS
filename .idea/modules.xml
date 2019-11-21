@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../Photographers-hub/.idea/Photographers-hub.iml" filepath="$PROJECT_DIR$/../Photographers-hub/.idea/Photographers-hub.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Vairavimo_Mokyklos_IS.iml" filepath="$PROJECT_DIR$/.idea/Vairavimo_Mokyklos_IS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../3 kursas/Tinklai/vartvald/.idea/vartvald.iml" filepath="$PROJECT_DIR$/../../3 kursas/Tinklai/vartvald/.idea/vartvald.iml" />
     </modules>
   </component>
 </project>

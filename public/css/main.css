@@ -2,3 +2,7 @@ label.required:before {
     content: "*";
     color:red;
 }
+
+table tr td:last-child {
+    text-align: right;
+}

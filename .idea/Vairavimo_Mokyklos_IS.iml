@@ -115,5 +115,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Photographers-hub" />
+    <orderEntry type="module" module-name="vartvald" />
   </component>
 </module>

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Filialas;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,8 +14,10 @@ class FilialaiController extends AbstractController
      */
     public function index()
     {
-        return $this->render('filialai/filialai.html.twig', [
+        $filialai = $this->getDoctrine()->getRepository(Filialas::class)->findAll();
 
+        return $this->render('filialai/filialai.html.twig', [
+        'filialai' => $filialai
         ]);
     }
 
