@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Miestai{% endblock %}
+
+{% block body %}
+    <h1>Miestų sąrašas:</h1>
+    <a href="{{ path('app_miestaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti miestą</a>
+    <table class="table table-hover">
+        <tr>
+            <th>ID</th>
+            <th>Pavadinimas</th>
+            <th></th>
+        </tr>
+        {% for miestas in miestai %}
+            <tr>
+                <td>{{ miestas.id }}</td>
+                <td>{{ miestas.pavadinimas }}</td>
+                <td>
+                    <a href="{{ path('app_miestaiRedaguoti', {'miestasID':miestas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
+                    <a href="{{ path('app_miestaiIstrinti', {'miestasID':miestas.id}) }}" class="btn btn-sm btn-danger js-delete-btn">Ištrinti</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('.js-delete-btn').on('click', function () {
+                return confirm('Ar tikrai norite istrinti filiala?');
+            });
+        });
+    </script>
+{% endblock %}

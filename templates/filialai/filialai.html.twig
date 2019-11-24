@@ -4,7 +4,10 @@
 
 {% block body %}
     <h1>Filialų sąrašas:</h1>
-    <a href="{{ path('app_filialaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti filialą</a>
+    <div class="float-right">
+        <a href="{{ path('app_miestai') }}" class="btn btn-primary mx-3 my-1">Miestų sąrašas</a>
+        <a href="{{ path('app_filialaiPrideti') }}" class="btn btn-primary my-1">Pridėti filialą</a>
+    </div>
     <table class="table table-hover">
         <tr>
             <th>Filialas</th>
@@ -20,10 +23,10 @@
                 <td>{{ filialas.miestas.pavadinimas }}</td>
                 <td>{{ filialas.telefonoNumeris }}</td>
                 <td>
-                    <a href="{{ path('app_filialaiMarsrutai') }}" class="btn btn-sm btn-success">Maršrutai</a>
-                    <a href="{{ path('app_filialoInstruktoriai') }}" class="btn btn-sm btn-success">Darbuotojai</a>
-                    <a href="{{ path('app_filialaiRedaguoti') }}" class="btn btn-sm btn-primary">Redaguoti</a>
-                    <a href="{{ path('app_filialaiIstrinti') }}" class="btn btn-sm btn-danger js-delete-btn">Ištrinti</a>
+                    <a href="{{ path('app_filialaiMarsrutai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Maršrutai</a>
+                    <a href="{{ path('app_filialoInstruktoriai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Darbuotojai</a>
+                    <a href="{{ path('app_filialaiRedaguoti', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
+                    <a href="{{ path('app_filialaiIstrinti', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-danger js-delete-btn">Ištrinti</a>
                 </td>
             </tr>
         {% endfor %}
