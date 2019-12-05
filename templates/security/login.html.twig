@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prisijungimas{% endblock %}
+
+{% block body %}
+
+<div class="d-flex justify-content-center">
+{% if app.user %}
+        <div class="mb-3">
+            <h5>
+                Jūs esate prisijungęs el. paštu {{ app.user.email }}, <a href="{{ path('app_logout') }}">Atsijungti</a>
+            </h5>
+        </div>
+{% else %}
+
+<form method="post" style="width: 400px">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <h1 class="h3 mb-3 font-weight-normal">Prisijungimas</h1>
+    <label for="inputEmail">El. paštas</label>
+    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
+    <br/>
+    <label for="inputPassword">Slaptažodis</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" required>
+
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}"
+    >
+    <br/>
+    <button class="btn btn-lg btn-primary" type="submit">
+       Prisijungti
+    </button>
+</form>
+</div>
+{% endif %}
+{% endblock %}

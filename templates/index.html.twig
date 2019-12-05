@@ -4,4 +4,12 @@
 
 {% block body %}
 <h1>Sveiki atvykę į Vairavimo Mokyklos IS</h1>
+<br/>
+    {% if app.user %}
+        <div class="mb-3">
+            <h5>
+                Jūs esate prisijungęs el. paštu {{ app.user.email }}, <a href="{{ path('app_logout') }}">Atsijungti</a>
+            </h5>
+        </div>
+    {% endif %}
 {% endblock %}
