@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Filialas;
+use App\Entity\Marsrutas;
 use App\Entity\Miestas;
 use App\Form\FilialaiFormType;
+use App\Form\MarsrutasFormType;
 use App\Form\MiestasFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,14 +105,47 @@ class FilialaiController extends AbstractController
     }
 
     /**
-     * @Route("/filialai/marsrutai/{filialasID}", name="app_filialaiMarsrutai")
+     * @Route("/filialai/{filialasID}/marsrutai/", name="app_filialaiMarsrutai")
      */
     public function routes($filialasID)
     {
+        $filialas = $this->getDoctrine()->getRepository(Filialas::class)->find($filialasID);
+        $marsrutai = $filialas->getMarsrutas();
 
 
         return $this->render('filialai/marsrutai.html.twig', [
+            'filialas' => $filialas,
+            'marsrutai' => $marsrutai,
+        ]);
+    }
+    /**
+     * @Route("/filialai/{filialasID}/marsrutai/prideti", name="app_marsrutaiPrideti")
+     */
+    public function routesAdd(Request $request, $filialasID)
+    {
+        $form = $this->createForm(MarsrutasFormType::class);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $filialas = $this->getDoctrine()->getRepository(Filialas::class)->find($filialasID);
+
+            $marsrutas = $form->getData();
+            $marsrutas->setFilialas($filialas);
+
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($marsrutas);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Maršrutas pridėtas');
+            return $this->redirectToRoute('app_filialaiMarsrutai', ['filialasID' => $filialas->getId()]);
+        }
+
+        return $this->render('filialai/forma.html.twig', [
+            'form' => $form->createView(),
+            'purpose' => 'Pridėti',
+            'object' => 'maršrutą',
         ]);
     }
 

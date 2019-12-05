@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,16 @@ class Filialas
      * @ORM\JoinColumn(nullable=false)
      */
     private $miestas;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Marsrutas", mappedBy="Filialas")
+     */
+    private $marsrutas;
+
+    public function __construct()
+    {
+        $this->marsrutas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +98,37 @@ class Filialas
     public function setMiestas(?Miestas $miestas): self
     {
         $this->miestas = $miestas;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Marsrutas[]
+     */
+    public function getMarsrutas(): Collection
+    {
+        return $this->marsrutas;
+    }
+
+    public function addMarsruta(Marsrutas $marsruta): self
+    {
+        if (!$this->marsrutas->contains($marsruta)) {
+            $this->marsrutas[] = $marsruta;
+            $marsruta->setFilialas($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMarsruta(Marsrutas $marsruta): self
+    {
+        if ($this->marsrutas->contains($marsruta)) {
+            $this->marsrutas->removeElement($marsruta);
+            // set the owning side to null (unless already changed)
+            if ($marsruta->getFilialas() === $this) {
+                $marsruta->setFilialas(null);
+            }
+        }
 
         return $this;
     }

@@ -3,6 +3,22 @@
 {% block title %}Maršrutai{% endblock %}
 
 {% block body %}
-    <h1>Maršrutai</h1>
+    <div class="row">
+        <div class="col">
+            <h1>Maršrutai</h1>
+        </div>
+        <div class="col">
+            <a href="{{ path('app_marsrutaiPrideti', {'filialasID':filialas.id}) }}"
+               class="btn btn-primary my-1 float-right">Pridėti maršrutą</a>
+        </div>
+    </div>
 
+    {% for marsrutas in marsrutai %}
+        <div class="col" align="center">
+            <iframe class="my-2" src="{{ marsrutas.nuoroda }}" width="640" height="480px"></iframe>
+        </div>
+    {% endfor %}
+
+    {#<iframe src="https://www.google.com/maps/d/embed?mid=1qVzytD1c2voTgfv_NNn7Qf9ED1U9ZjWJ&hl=lt" width="640" height="480"></iframe>#}
+    {#<iframe src="https://www.maps.ie/map-my-route/viewMap.php?route=113678" height="500px" width="500px" scrolling="no"></iframe>#}
 {% endblock %}
