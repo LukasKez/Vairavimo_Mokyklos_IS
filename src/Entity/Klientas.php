@@ -12,13 +12,14 @@ use Doctrine\ORM\Mapping as ORM;
 class Klientas
 {
 
+
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -43,6 +44,7 @@ class Klientas
      * @ORM\Column(type="string", length=255)
      */
     private $telefono_numeris;
+
 
 
     public function getId(): ?int
@@ -146,4 +148,5 @@ class Klientas
 
         return $this;
     }
+
 }
