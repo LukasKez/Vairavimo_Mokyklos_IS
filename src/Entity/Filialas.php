@@ -44,9 +44,16 @@ class Filialas
      */
     private $marsrutas;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Instruktorius", mappedBy="filialas")
+     */
+    private $instruktoriai;
+
+
     public function __construct()
     {
         $this->marsrutas = new ArrayCollection();
+        $this->instruktoriai = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -131,5 +138,14 @@ class Filialas
         }
 
         return $this;
+    }
+
+
+    /**
+     * @return Collection|Instruktorius[]
+     */
+    public function getInstruktoriai(): Collection
+    {
+        return $this->instruktoriai;
     }
 }

@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Entity\Egzaminas;
+use App\Entity\EgzaminuTipai;
+use App\Entity\LaikomasEgzaminas;
 
 class EgzaminaiController extends AbstractController
 {
@@ -13,8 +17,12 @@ class EgzaminaiController extends AbstractController
      */
     public function index()
     {
-        return $this->render('egzaminai/egzaminai.html.twig', [
+        $egzaminai = $this->getDoctrine()
+            ->getRepository(LaikomasEgzaminas::class)
+            ->findAll();
 
+        return $this->render('egzaminai/egzaminai.html.twig', [
+            'egzaminai' => $egzaminai
         ]);
     }
 
@@ -23,8 +31,12 @@ class EgzaminaiController extends AbstractController
      */
     public function indexAdmin()
     {
-        return $this->render('egzaminai/egzaminai_admin.html.twig', [
+        $egzaminai = $this->getDoctrine()
+            ->getRepository(Egzaminas::class)
+            ->findAll();
 
+        return $this->render('egzaminai/egzaminai_admin.html.twig', [
+            'egzaminai' => $egzaminai
         ]);
     }
 
@@ -39,12 +51,35 @@ class EgzaminaiController extends AbstractController
     }
 
     /**
-     * @Route("/egzaminai/redaguoti", name="app_redaguotiEgzamina")
+     * @Route("/egzaminai/redaguoti/{slug}", name="app_redaguotiEgzamina")
      */
-    public function update()
+    public function update($slug)
     {
+        $egzaminas = $this->getDoctrine()
+            ->getRepository(Egzaminas::class)
+            ->find($slug);
         return $this->render('egzaminai/redaguoti_egzamina.html.twig', [
+            'egzaminas' => $egzaminas
+        ]);
+    }
 
+    /**
+     * @Route("/egzaminai/pakeisti/{slug}", name="app_pakeistiEgzamina")
+     */
+    public function edit(Request $request, $slug, EntityManagerInterface $entityManager)
+    {
+        $egzaminas = $this->getDoctrine()
+            ->getRepository(Egzaminas::class)
+            ->find($slug);
+
+        $date = new \DateTime($request->get('data'));
+        $egzaminas->setData($date);
+        $egzaminas->setLaikas(strval($request->request->get('laikas')));
+        $egzaminas->setAdresas($request->request->get('adresas'));
+        $entityManager->flush();
+
+        return $this->render('egzaminai/redaguoti_egzamina.html.twig', [
+            'egzaminas' => $egzaminas
         ]);
     }
 
@@ -73,18 +108,33 @@ class EgzaminaiController extends AbstractController
      */
     public function average()
     {
+        $egzaminai = $this->getDoctrine()
+            ->getRepository(LaikomasEgzaminas::class)
+            ->findAll();
+        $suma = 0;
+        $kiekis = 0;
+        foreach ($egzaminai as $egzaminas){
+            $suma += $egzaminas->getBalas();
+            $kiekis++;
+        }
+        $vid = $suma / $kiekis;
         return $this->render('egzaminai/vidurkis.html.twig', [
-
+            'vidurkis' => $vid,
+            'kiekis' => $kiekis,
+            'egzaminai' => $egzaminai
         ]);
     }
 
     /**
-     * @Route("/egzaminai/rezultatai", name="app_perziuretiRezultatus")
+     * @Route("/egzaminai/rezultatai/{slug}", name="app_perziuretiRezultatus")
      */
-    public function results()
+    public function results($slug)
     {
+        $egzaminas = $this->getDoctrine()
+            ->getRepository(LaikomasEgzaminas::class)
+            ->find($slug);
         return $this->render('egzaminai/rezultatai.html.twig', [
-
+            'egzaminas'=>$egzaminas
         ]);
     }
 }

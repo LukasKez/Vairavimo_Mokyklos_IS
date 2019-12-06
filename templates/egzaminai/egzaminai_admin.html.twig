@@ -13,26 +13,18 @@
             <th>Adresas</th>
             <th>Funkcijos</th>
         </tr>
-        <tr>
-            <td>1</td>
-            <td>Teorijos egzaminas</td>
-            <td>2019-12-02 10:30</td>
-            <td>Raudondvario pl. 234b, Kaunas</td>
-            <td>
-                <a href="{{ path('app_itrauktiEgzamina') }}" class="btn btn-success">Įtraukti į tvarkaraštį</a>
-                <a href="{{ path('app_redaguotiEgzamina') }}" class="btn btn-primary">Redaguoti</a>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Vairavimo egzaminas</td>
-            <td>2019-12-02 10:30</td>
-            <td>Raudondvario pl. 234b, Kaunas</td>
-            <td>
-                <a href="{{ path('app_itrauktiEgzamina') }}" class="btn btn-success">Įtraukti į tvarkaraštį</a>
-                <a href="{{ path('app_redaguotiEgzamina') }}" class="btn btn-primary">Redaguoti</a>
-            </td>
-        </tr>
+        {% for egzaminas in egzaminai %}
+            <tr>
+                <td>{{ egzaminas.id }}</td>
+                <td>{{ egzaminas.getEgzaminoTipas.name }}</td>
+                <td>{{ egzaminas.data|date("Y-m-d", false) }} {{ egzaminas.laikas }}</td>
+                <td>{{ egzaminas.adresas }}</td>
+                <td>
+                    <a href="{{ path('app_itrauktiEgzamina') }}" class="btn btn-success">Įtraukti į tvarkaraštį</a>
+                    <a href="{{ path('app_redaguotiEgzamina', {slug: egzaminas.id}) }}" class="btn btn-primary">Redaguoti</a>
+                </td>
+            </tr>
+        {% endfor %}
     </table>
 
 {% endblock %}

@@ -14,22 +14,17 @@
             <th>Funkcijos</th>
         </tr>
         <tr>
-            <td>1</td>
-            <td>Teorijos egzaminas</td>
-            <td>2019-12-02 10:30</td>
-            <td>Raudondvario pl. 234b, Kaunas</td>
+            {% for egzaminas in egzaminai %}
+        <tr>
+            <td>{{ egzaminas.getEgzaminas.id }}</td>
+            <td>{{ egzaminas.getEgzaminas.getEgzaminoTipas.name }}</td>
+            <td>{{ egzaminas.getEgzaminas.data|date("Y-m-d", false) }} {{ egzaminas.getEgzaminas.laikas }}</td>
+            <td>{{ egzaminas.getEgzaminas.adresas }}</td>
             <td>
-                <a href="{{ path('app_perziuretiRezultatus') }}" class="btn btn-success">Peržiūrėti rezultatus</a>
+                <a href="{{ path('app_perziuretiRezultatus', {slug: egzaminas.id}) }}" class="btn btn-success">Peržiūrėti rezultatus</a>
             </td>
         </tr>
-        <tr>
-            <td>2</td>
-            <td>Vairavimo egzaminas</td>
-            <td>2019-12-02 10:30</td>
-            <td>Raudondvario pl. 234b, Kaunas</td>
-            <td>
-                <a href="{{ path('app_perziuretiRezultatus') }}" class="btn btn-success">Peržiūrėti rezultatus</a>
-            </td>
+        {% endfor %}
         </tr>
     </table>
 

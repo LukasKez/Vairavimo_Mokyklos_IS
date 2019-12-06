@@ -3,6 +3,25 @@
 {% block title %}Vidurkis{% endblock %}
 
 {% block body %}
-    <h1>Vidurkis</h1>
-
+    <h1>Vidurkio peržiūra</h1>
+    <br/>
+    <div style="margin-left: 10px">
+        <h5>Iš viso laikyta egzaminų: {{ kiekis }}</h5>
+        <h5>Laikytų egzaminų balai:
+            {% for egzaminas in egzaminai %}
+                {{ egzaminas.balas }}
+            {% endfor %}
+        </h5>
+        <br/>
+        <h5>Bendras vidurkis: {{ vidurkis }}</h5>
+        {% if vidurkis < 4 %}
+            <h5 style="color: red">Jūsų lygis yra nepatenkinamas</h5>
+        {% elseif vidurkis < 6 %}
+            <h5 style="color: #fcad03">Jūsų lygis yra patenkinamas</h5>
+        {% elseif vidurkis < 9 %}
+            <h5 style="color: #ede61c">Jūsų lygis yra pagrindinis</h5>
+        {% else %}
+            <h5 style="color: green">Jūsų lygis yra aukštesnysis</h5>
+        {% endif %}
+    </div>
 {% endblock %}

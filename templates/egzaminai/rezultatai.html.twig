@@ -4,5 +4,17 @@
 
 {% block body %}
     <h1>Rezultatai</h1>
-
+    <br/>
+    <ul>
+        <li>Egzamino tipas: {{ egzaminas.getEgzaminas.getEgzaminoTipas.name }}</li>
+        <li>Data ir laikas: {{ egzaminas.getEgzaminas.data|date("Y-m-d", false) }} {{ egzaminas.getEgzaminas.laikas }} </li>
+        <li>Adresas: {{ egzaminas.getEgzaminas.adresas }}</li>
+        <li>Egzaminą laikė: {{ egzaminas.getKlientas.vardas }} {{ egzaminas.getKlientas.pavarde }}</li>
+        <li>Egzaminą vertino: {{ egzaminas.getInstruktorius.vardas }} {{ egzaminas.getInstruktorius.pavarde }}</li>
+    </ul>
+    {% if egzaminas.getRezultatas.id == 1 %}
+        <h5 style="margin-left: 20px; color: green">Gautas balas: {{ egzaminas.balas }}, egzaminas išlaikytas.</h5>
+    {% else %}
+        <h5 style="margin-left: 20px; color: red">Gautas balas: {{ egzaminas.balas }}, egzaminas neišlaikytas.</h5>
+    {% endif %}
 {% endblock %}

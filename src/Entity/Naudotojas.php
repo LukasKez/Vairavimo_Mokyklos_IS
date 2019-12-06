@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -109,5 +111,37 @@ class Naudotojas implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Klientas", mappedBy="naudotojas_id")
+     */
+    private $klientai;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Instruktorius", mappedBy="naudotojas_id")
+     */
+    private $instruktoriai;
+
+    public function __construct()
+    {
+        $this->klientai = new ArrayCollection();
+        $this->instruktoriai = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Klientas[]
+     */
+    public function getKlientai(): Collection
+    {
+        return $this->klientai;
+    }
+
+    /**
+     * @return Collection|Instruktorius[]
+     */
+    public function getInstruktoriai(): Collection
+    {
+        return $this->instruktoriai;
     }
 }
