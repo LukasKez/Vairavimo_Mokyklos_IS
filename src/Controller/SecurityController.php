@@ -33,4 +33,13 @@ class SecurityController extends AbstractController
     {
         
     }
+
+    /**
+     * @Route("/neleidziama", name="app_access_denied")
+     */
+    public function deny()
+    {
+        return $this->render('security/noaccess.html.twig');
+    }
+
 }

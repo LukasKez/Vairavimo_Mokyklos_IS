@@ -1,0 +1,9 @@
+<h3>Pasikeitė egzamino informacija!</h3>
+
+<h4>Laikomo egzamino duomenys:</h4>
+<ul>
+    <li>Tipas: {{ data['EgzaminoDuomenys'].EgzaminoTipas.name }}</li>
+    <li>Data ir laikas: {{ data['EgzaminoDuomenys'].getData|date('Y-m-d') }} {{ data['EgzaminoDuomenys'].getLaikas }}</li>
+    <li>Adresas: {{ data['EgzaminoDuomenys'].getAdresas }}</li>
+</ul>
+<p>Komentarai: {{ data['Komentarai'] }}</p>

@@ -2,32 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f79abdb3-9829-410a-aa71-aa2728f50cfd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Entity/Egzaminas.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/EgzaminuTipai.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/InstruktoriausTvarkarastis.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/Instruktorius.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/Klientas.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/KlientoTvarkarastis.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/LaikomasEgzaminas.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Repository/EgzaminasRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Repository/EgzaminuTipaiRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Repository/InstruktoriausTvarkarastisRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Repository/InstruktoriusRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Repository/KlientasRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Repository/KlientoTvarkarastisRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Repository/LaikomasEgzaminasRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Form/EgzaminasFormType.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/egzaminai/laisko_forma.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/security/noaccess.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Vairavimo_Mokyklos_IS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Vairavimo_Mokyklos_IS.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/framework.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/security.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/EgzaminaiController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/EgzaminaiController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Filialas.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Filialas.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Naudotojas.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Naudotojas.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20191205152809.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SecurityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SecurityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataFixtures/NaudotojasFixtures.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataFixtures/NaudotojasFixtures.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Egzaminas.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Egzaminas.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/InstruktoriausTvarkarastis.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/InstruktoriausTvarkarastis.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Instruktorius.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Instruktorius.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Klientas.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Klientas.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/KlientoTvarkarastis.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/KlientoTvarkarastis.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/LaikomasEgzaminasRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/LaikomasEgzaminasRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/egzaminai/egzaminai.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/egzaminai/egzaminai.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/egzaminai/egzaminai_admin.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/egzaminai/egzaminai_admin.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/egzaminai/egzaminai_admin.html.twig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/egzaminai/itraukti_egzamina.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/egzaminai/itraukti_egzamina.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/egzaminai/redaguoti_egzamina.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/egzaminai/redaguoti_egzamina.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/egzaminai/rezultatai.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/egzaminai/rezultatai.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/egzaminai/taisykles.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/egzaminai/taisykles.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/egzaminai/siusti_laiska.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/egzaminai/siusti_laiska.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/egzaminai/vidurkis.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/egzaminai/vidurkis.html.twig" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -138,7 +139,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
       <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
       <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-cache-bundle" />
       <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
       <path value="$PROJECT_DIR$/vendor/doctrine/reflection" />
       <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
@@ -171,7 +171,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Repository" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Form" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -179,16 +179,16 @@
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\Vairavimo mokyklos IS - 2\Vairavimo_Mokyklos_IS\src\Entity" />
+      <recent name="C:\Users\Lukas\Documents\Git_repository\Vairavimo_Mokyklos_IS\templates\darbuotojai" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\Vairavimo mokyklos IS - 2\Vairavimo_Mokyklos_IS\src\Form" />
       <recent name="C:\xampp\htdocs\Vairavimo mokyklos IS - 2\Vairavimo_Mokyklos_IS\src\Repository" />
       <recent name="C:\xampp\htdocs\Vairavimo mokyklos IS - 2\Vairavimo_Mokyklos_IS\src\Entity" />
       <recent name="C:\Users\Lukas\Documents\3 kursas\Tinklai\vartvald" />
       <recent name="C:\Users\Lukas\Documents\Git_repository\Vairavimo_Mokyklos_IS\templates\filialai" />
-      <recent name="C:\Users\Lukas\Documents\Git_repository\Vairavimo_Mokyklos_IS\templates" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\xampp\htdocs\Vairavimo mokyklos IS - 2\Vairavimo_Mokyklos_IS\src\Entity" />
-      <recent name="C:\Users\Lukas\Documents\Git_repository\Vairavimo_Mokyklos_IS\templates\darbuotojai" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -229,6 +229,10 @@
       <workItem from="1575543122839" duration="5752000" />
       <workItem from="1575567570333" duration="5659000" />
       <workItem from="1575573268941" duration="1008000" />
+      <workItem from="1575626753292" duration="546000" />
+      <workItem from="1575713426918" duration="50000" />
+      <workItem from="1575713478624" duration="11350000" />
+      <workItem from="1575725271480" duration="13718000" />
     </task>
     <servers />
   </component>

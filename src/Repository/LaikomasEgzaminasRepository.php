@@ -19,22 +19,22 @@ class LaikomasEgzaminasRepository extends ServiceEntityRepository
         parent::__construct($registry, LaikomasEgzaminas::class);
     }
 
-    // /**
-    //  * @return LaikomasEgzaminas[] Returns an array of LaikomasEgzaminas objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+    / * @return LaikomasEgzaminas[] Returns an array of LaikomasEgzaminas objects
+    **/
+    public function findByInstruktorius($id)
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT e
+            FROM App\Entity\LaikomasEgzaminas e
+            WHERE e.instruktorius = :id'
+        )->setParameter('id', $id);
+
+        // returns an array of Product objects
+        return $query->getResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?LaikomasEgzaminas

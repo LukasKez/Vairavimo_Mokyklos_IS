@@ -3,6 +3,19 @@
 {% block title %}Įtraukti egzaminą į tvarkaraštį{% endblock %}
 
 {% block body %}
+    <a style="margin-left: 15px; text-decoration: none" href="{{ path('app_egzaminai') }}">
+        <span>&#10229;</span> Grįžti atgal</a>
     <h1>Įtraukti egzaminą į tvarkaraštį</h1>
+    <br/>
 
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <input type="submit" class="btn btn-success" value="Įtraukti">
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

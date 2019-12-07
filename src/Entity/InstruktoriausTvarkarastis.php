@@ -57,5 +57,22 @@ class InstruktoriausTvarkarastis
         return $this;
     }
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Instruktorius", inversedBy="tvarkarasciai")
+     * @ORM\JoinColumn(name="instruktorius", referencedColumnName="id")
+     */
+    private $instruktorius;
+
+    public function getInstruktorius(): ?Instruktorius
+    {
+        return $this->instruktorius;
+    }
+
+    public function setInstruktorius(?Instruktorius $instruktorius): self
+    {
+        $this->instruktorius = $instruktorius;
+
+        return $this;
+    }
 
 }

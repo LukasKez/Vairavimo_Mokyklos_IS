@@ -74,5 +74,22 @@ class KlientoTvarkarastis
         return $this;
     }
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Klientas", inversedBy="tvarkarasciai")
+     * @ORM\JoinColumn(name="klientas", referencedColumnName="id")
+     */
+    private $klientas;
+
+    public function getKlientas(): ?Klientas
+    {
+        return $this->klientas;
+    }
+
+    public function setKlientas(?Klientas $klientas): self
+    {
+        $this->klientas = $klientas;
+
+        return $this;
+    }
 
 }

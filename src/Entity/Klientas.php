@@ -110,6 +110,11 @@ class Klientas
         return $this;
     }
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\KlientoTvarkarastis", mappedBy="klientas")
+     */
+    private $tvarkarasciai;
+
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\LaikomasEgzaminas", mappedBy="klientas")
@@ -119,6 +124,7 @@ class Klientas
     public function __construct()
     {
         $this->egzaminai = new ArrayCollection();
+        $this->tvarkarasciai = new ArrayCollection();
     }
 
     /**
@@ -146,4 +152,21 @@ class Klientas
 
         return $this;
     }
+
+    public function getPilnasVardas(): ?string
+    {
+        return $this->vardas.' '.$this->pavarde;
+    }
+
+
+
+    /**
+     * @return Collection|KlientoTvarkarastis[]
+     */
+    public function getTvarkarastis(): Collection
+    {
+        return $this->tvarkarasciai;
+    }
+
+
 }

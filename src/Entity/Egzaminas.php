@@ -92,7 +92,7 @@ class Egzaminas
      */
     private $fk_tipas;
 
-    public function getEgzaminoTipas(): ?EgzaminuTipai
+    public function EgzaminoTipas(): ?EgzaminuTipai
     {
         return $this->fk_tipas;
     }
@@ -109,11 +109,23 @@ class Egzaminas
      */
     private $laikomi_egzaminai;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\KlientoTvarkarastis")
+     * @ORM\JoinTable(name="kliento_tvarkarascio_egzaminas")
+     */
+    private $kliento_tvarkarascio_egzaminas;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\InstruktoriausTvarkarastis")
+     * @ORM\JoinTable(name="instruktoriaus_tvarkarascio_egzaminas")
+     */
+    private $instruktoriaus_tvarkarascio_egzaminas;
 
     public function __construct()
     {
         $this->laikomi_egzaminai = new ArrayCollection();
+        $this->kliento_tvarkarascio_egzaminas = new ArrayCollection();
+        $this->instruktoriaus_tvarkarascio_egzaminas = new ArrayCollection();
     }
 
     /**
@@ -123,6 +135,25 @@ class Egzaminas
     {
         return $this->laikomi_egzaminai;
     }
+
+    public function addKlientoEgzaminas(KlientoTvarkarastis $tvarkarastis){
+        if ($this->kliento_tvarkarascio_egzaminas->contains($tvarkarastis)) {
+            return;
+        }
+        $this->kliento_tvarkarascio_egzaminas[] = $tvarkarastis;
+    }
+
+    public function addInstruktoriausEgzaminas(InstruktoriausTvarkarastis $tvarkarastis){
+        if ($this->instruktoriaus_tvarkarascio_egzaminas->contains($tvarkarastis)) {
+            return;
+        }
+        $this->instruktoriaus_tvarkarascio_egzaminas[] = $tvarkarastis;
+    }
+
+    public function getPavadinimas(){
+        return 'Adresas: '.$this->adresas.', Laikas: '.$this->data->format('Y-m-d').', '.$this->laikas;
+    }
+
 
 
 }

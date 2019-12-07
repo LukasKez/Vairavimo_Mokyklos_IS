@@ -3,10 +3,13 @@
 {% block title %}Rezultatai{% endblock %}
 
 {% block body %}
+    <a style="margin-left: 15px; text-decoration: none" href="{{ path('app_egzaminai') }}">
+        <span>&#10229;</span> Grįžti atgal</a>
+    <br/>
     <h1>Rezultatai</h1>
     <br/>
     <ul>
-        <li>Egzamino tipas: {{ egzaminas.getEgzaminas.getEgzaminoTipas.name }}</li>
+        <li>Egzamino tipas: {{ egzaminas.getEgzaminas.EgzaminoTipas.name }}</li>
         <li>Data ir laikas: {{ egzaminas.getEgzaminas.data|date("Y-m-d", false) }} {{ egzaminas.getEgzaminas.laikas }} </li>
         <li>Adresas: {{ egzaminas.getEgzaminas.adresas }}</li>
         <li>Egzaminą laikė: {{ egzaminas.getKlientas.vardas }} {{ egzaminas.getKlientas.pavarde }}</li>

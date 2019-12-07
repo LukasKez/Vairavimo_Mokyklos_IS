@@ -38,6 +38,16 @@ class NaudotojasFixtures extends Fixture
                      ));
         $manager->persist($klientas);
 
+        $klientas1 = new Naudotojas();
+        $klientas1->setEmail('klientas1@gmail.com');
+        $roles3[] = 'ROLE_KLIENTAS';
+        $klientas1->setRoles($roles1);
+        $klientas1->setPassword($this->passwordEncoder->encodePassword(
+            $klientas1,
+            '12345'
+        ));
+        $manager->persist($klientas1);
+
         $instruktorius = new Naudotojas();
         $instruktorius->setEmail('instruktorius@gmail.com');
         $roles2[] = 'ROLE_INSTRUKTORIUS';
@@ -47,6 +57,16 @@ class NaudotojasFixtures extends Fixture
                          '12345'
                      ));
         $manager->persist($instruktorius);
+
+        $instruktorius1 = new Naudotojas();
+        $instruktorius1->setEmail('instruktorius1@gmail.com');
+        $roles4[] = 'ROLE_INSTRUKTORIUS';
+        $instruktorius1->setRoles($roles4);
+        $instruktorius1->setPassword($this->passwordEncoder->encodePassword(
+            $instruktorius1,
+            '12345'
+        ));
+        $manager->persist($instruktorius1);
 
         $manager->flush();
     }

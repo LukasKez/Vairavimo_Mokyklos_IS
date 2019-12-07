@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\InstruktoriausTvarkarastis;
+use App\Entity\KlientoTvarkarastis;
+use App\Form\EgzaminasFormType;
+use App\Form\EgzaminoItraukimoFormType;
+use App\Form\LaiskoFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,9 +22,31 @@ class EgzaminaiController extends AbstractController
      */
     public function index()
     {
-        $egzaminai = $this->getDoctrine()
-            ->getRepository(LaikomasEgzaminas::class)
-            ->findAll();
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $naudotojas = $this->getUser();
+        $egzaminai = array();
+        $visiEgzaminai = $this->getDoctrine()
+            ->getRepository(LaikomasEgzaminas::class)->findAll();
+
+        if($naudotojas->getRoles()[0] == 'ROLE_INSTRUKTORIUS'){
+            foreach($visiEgzaminai as $egzaminas){
+                if($egzaminas->getInstruktorius()->getNaudotojoId()->getId() == $naudotojas->getId()){
+                    array_push($egzaminai, $egzaminas);
+                }
+            }
+        }else if($naudotojas->getRoles()[0] == 'ROLE_KLIENTAS'){
+            foreach($visiEgzaminai as $egzaminas){
+                if($egzaminas->getKlientas()->getNaudotojoId()->getId() == $naudotojas->getId()){
+                    array_push($egzaminai, $egzaminas);
+                }
+            }
+        }
+        else if($naudotojas->getRoles()[0] == 'ROLE_ADMIN'){
+            $egzaminai = $this->getDoctrine()
+                ->getRepository(Egzaminas::class)
+                ->findAll();
+        }
 
         return $this->render('egzaminai/egzaminai.html.twig', [
             'egzaminai' => $egzaminai
@@ -27,69 +54,135 @@ class EgzaminaiController extends AbstractController
     }
 
     /**
-     * @Route("/egzaminai-admin", name="app_egzaminai_admin")
+     * @Route("/egzaminai/itraukti/{slug}", name="app_itrauktiEgzamina")
      */
-    public function indexAdmin()
+    public function insert(Request $request, $slug)
     {
-        $egzaminai = $this->getDoctrine()
-            ->getRepository(Egzaminas::class)
-            ->findAll();
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('egzaminai/egzaminai_admin.html.twig', [
-            'egzaminai' => $egzaminai
-        ]);
-    }
+        $egzaminas = $this->getDoctrine()->getRepository(Egzaminas::class)->find($slug);
+        $form = $this->createForm(EgzaminoItraukimoFormType::class);
+        $form->handleRequest($request);
 
-    /**
-     * @Route("/egzaminai/itraukti", name="app_itrauktiEgzamina")
-     */
-    public function add()
-    {
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $data = $form->getData();
+            $klientoTvarkarastis = null;
+            $instruktoriausTvarkarastis = null;
+
+            $klientoTvarkarasciai= $this->getDoctrine()
+                ->getRepository(KlientoTvarkarastis::class)->findAll();//findOneBy(['pabaiga' => null]);
+            $instruktoriausTvarkarasiai = $this->getDoctrine()
+                ->getRepository(InstruktoriausTvarkarastis::class)->findAll();//indOneBy(['pabaiga' => null]);
+
+            foreach ($klientoTvarkarasciai as $tvarkarastis){
+                $id = $tvarkarastis->getKlientas()->getId();
+                $pabaiga = $tvarkarastis->getPabaiga();
+                if($data['Klientas']->getId() == $id && $pabaiga == null){
+                    $klientoTvarkarastis = $tvarkarastis;
+                }
+            }
+            foreach ($instruktoriausTvarkarasiai as $tvarkarastis){
+                $id = $tvarkarastis->getInstruktorius()->getId();
+                $pabaiga = $tvarkarastis->getPabaiga();
+                if($data['Instruktorius']->getId() == $id && $pabaiga == null){
+                    $instruktoriausTvarkarastis = $tvarkarastis;
+                }
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $date = new \DateTime();
+            $date->format('Y-m-d');
+            if($klientoTvarkarastis == null){
+                $klientoTvarkarastis = new KlientoTvarkarastis();
+                $klientoTvarkarastis->setPradzia($date);
+                $klientoTvarkarastis->setKlientas($data['Klientas']);
+                $klientoTvarkarastis->setVairavimuSkaicius(0);
+                $entityManager->persist($klientoTvarkarastis);
+            }
+            if($instruktoriausTvarkarastis == null){
+                $instruktoriausTvarkarastis = new InstruktoriausTvarkarastis();
+                $instruktoriausTvarkarastis->setPradzia($date);
+                $instruktoriausTvarkarastis->setInstruktorius($data['Instruktorius']);
+                $entityManager->persist($instruktoriausTvarkarastis);
+            }
+            $egzaminas->addKlientoEgzaminas($klientoTvarkarastis);
+            $egzaminas->addInstruktoriausEgzaminas($instruktoriausTvarkarastis);
+            $entityManager->persist($egzaminas);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Egzaminas sėkmingai įtrauktas į tvarkaraščius ');
+            return $this->redirectToRoute('app_egzaminai');
+        }
         return $this->render('egzaminai/itraukti_egzamina.html.twig', [
-
+            'form' => $form->createView()
         ]);
+
     }
 
     /**
      * @Route("/egzaminai/redaguoti/{slug}", name="app_redaguotiEgzamina")
      */
-    public function update($slug)
+    public function update(Request $request, $slug)
     {
-        $egzaminas = $this->getDoctrine()
-            ->getRepository(Egzaminas::class)
-            ->find($slug);
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $egzaminas = $this->getDoctrine()->getRepository(Egzaminas::class)->find($slug);
+        $form = $this->createForm(EgzaminasFormType::class, $egzaminas);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $egzaminas = $form->getData();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($egzaminas);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Egzaminas sėkmingai redaguotas. Nepamirškite pranešti klientams apie pasikeitimus! ');
+            return $this->redirectToRoute('app_egzaminai');
+        }
         return $this->render('egzaminai/redaguoti_egzamina.html.twig', [
+            'form' => $form->createView(),
             'egzaminas' => $egzaminas
         ]);
-    }
 
-    /**
-     * @Route("/egzaminai/pakeisti/{slug}", name="app_pakeistiEgzamina")
-     */
-    public function edit(Request $request, $slug, EntityManagerInterface $entityManager)
-    {
-        $egzaminas = $this->getDoctrine()
-            ->getRepository(Egzaminas::class)
-            ->find($slug);
-
-        $date = new \DateTime($request->get('data'));
-        $egzaminas->setData($date);
-        $egzaminas->setLaikas(strval($request->request->get('laikas')));
-        $egzaminas->setAdresas($request->request->get('adresas'));
-        $entityManager->flush();
-
-        return $this->render('egzaminai/redaguoti_egzamina.html.twig', [
-            'egzaminas' => $egzaminas
-        ]);
     }
 
     /**
      * @Route("/egzaminai/siusti-laiska", name="app_siustiLaiska")
      */
-    public function sendEmail()
+    public function sendEmail(Request $request, \Swift_Mailer $mailer)
     {
-        return $this->render('egzaminai/siusti_laiska.html.twig', [
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
+        $form = $this->createForm(LaiskoFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $data = $form->getData();
+
+            $message = (new \Swift_Message('Pasikeitė egzamino duomenys'))
+                ->setFrom('vairavimo-mokykla@gmail.com')
+                ->setTo($data['Kam']->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'egzaminai/laisko_forma.html.twig',
+                        ['data' => $data]
+                    ),
+                    'text/html'
+                )
+            ;
+
+            //dd($message);
+            $mailer->send($message);
+
+            $this->addFlash('success', 'Laiškas sėkmingai išsiųstas');
+            return $this->redirectToRoute('app_egzaminai');
+        }
+
+        return $this->render('egzaminai/siusti_laiska.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
@@ -108,6 +201,7 @@ class EgzaminaiController extends AbstractController
      */
     public function average()
     {
+        $this->denyAccessUnlessGranted('ROLE_KLIENTAS');
         $egzaminai = $this->getDoctrine()
             ->getRepository(LaikomasEgzaminas::class)
             ->findAll();
@@ -130,6 +224,7 @@ class EgzaminaiController extends AbstractController
      */
     public function results($slug)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $egzaminas = $this->getDoctrine()
             ->getRepository(LaikomasEgzaminas::class)
             ->find($slug);
@@ -137,4 +232,5 @@ class EgzaminaiController extends AbstractController
             'egzaminas'=>$egzaminas
         ]);
     }
+
 }
