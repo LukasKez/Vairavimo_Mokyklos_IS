@@ -4,15 +4,11 @@
 
 {% block body %}
 
-          <h4>Keisti automobilio būseną</h4>
-          <p>Pasirinkite būseną:</p>
-		  <form>
-		   <select class="form-control">
-				<option>Laisva</option>
-				<option>Naudojama</option>
-				<option>Remontuojama</option>			  
-		   </select>
-		 <button type="submit" class="btn btn-primary">Pakeisti</button>
-	   </form>
-		   
+      <h4>Keisti automobilio būseną</h4>
+      <p>Pasirinkite būseną:</p>
+			{{ form_start(form) }}
+	    {{ form_widget(form) }}
+	    <input type="submit" class="btn btn-primary" value="Vykdyti">
+	    {{ form_end(form) }}
+
 {% endblock %}

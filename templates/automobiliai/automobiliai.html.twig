@@ -4,61 +4,51 @@
 
 {% block body %}
 
-	  
     <h1>Automobilių sąrašas:</h1>
     <a href="{{ path('app_automobiliaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti automobilį</a>
     <table class="table">
         <tr>
-            <th>Kategorija</th>		
+            <th>Kategorija</th>
             <th>Automobilis</th>
             <th>Valst. nr.</th>
-            <th>Pagaminimo metai</th>			
+            <th>Pagaminimo metai</th>
             <th>Būsena</th>
-            <th>Pavarų dėžė</th>			
-            <th>Kėbulas</th>			
+            <th>Pavarų dėžė</th>
+            <th>Kėbulas</th>
+            <th>Filialas</th>
             <th>Funkcijos</th>
         </tr>
-        <tr>
-            <td>B</td>
-            <td>Volkswagen Polo</td>
-            <td>ABC 111</td>			
-            <td>2000</td>						
-            <td>Naudojamas</td>									
-            <td>Mechaninė</td>									
-            <td>Hečbekas</td>									
-            <td>
-                <a href="{{ path('app_automobiliaiVieta') }}" class="btn btn-success btn-sm">Rodyti buvimo vietą</a>
-                <a href="{{ path('app_automobiliaiFilialai') }}" class="btn btn-primary btn-sm">Keisti filialą</a>				
-                <a href="{{ path('app_automobiliaiBusena') }}" class="btn btn-warning btn-sm ">Keisti būseną</a>				
-                <a href="" class="btn btn-danger js-delete-btn btn-sm">Ištrinti automobilį</a>				
-            </td>
-        </tr>
-        <tr>
-            <td>B</td>
-            <td>Opel Astra</td>
-            <td>ABC 222</td>			
-            <td>2002</td>						
-            <td>Naudojamas</td>									
-            <td>Mechaninė</td>									
-            <td>Hečbekas</td>									
-            <td>
-                <a href="{{ path('app_automobiliaiVieta') }}" class="btn btn-success btn-sm">Rodyti buvimo vietą</a>
-                <a href="{{ path('app_automobiliaiFilialai') }}" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#automobilioFilialas">Keisti filialą</a>				
-                <a href="{{ path('app_automobiliaiBusena') }}" class="btn btn-warning btn-sm " data-toggle="modal" data-target="#automobilisBusena">Keisti būseną</a>				
-                <a href="" class="btn btn-danger js-delete-btn btn-sm">Ištrinti automobilį</a>				
-            </td>
-        </tr>		
+		{% for automobilis1 in transporto_priemones %}
+            <tr>
+                <td>{{ automobilis1.kategorija }}</td>
+                <td>{{ automobilis1.markes_pav }} {{ automobilis1.modelis }}</td>
+                <td>{{ automobilis1.valstybiniai_nr }}</td>
+                <td>{{ automobilis1.pagaminimo_metai }}</td>
+                <td>{{ automobilis1.busenos_pav }}</td>
+                <td>{{ automobilis1.deze    }}</td>
+                <td>{{ automobilis1.kebulas }}</td>
+                <td>{{ automobilis1.filialo_pav }}</td>
+                <td>
+					<a href="{{ path('app_automobiliaiVieta', {'id':automobilis1.id}) }}" class="btn btn-success btn-sm">Rodyti buvimo vietą</a>
+					<a href="{{ path('app_automobiliaiFilialai', {'id':automobilis1.id}) }}" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#automobilioFilialas">Keisti filialą</a>
+					<a href="{{ path('app_automobiliaiBusena', {'id':automobilis1.id}) }}" class="btn btn-warning btn-sm " data-toggle="modal" data-target="#automobilisBusena">Keisti būseną</a>
+					<a href="{{ path('app_automobiliaiIstrinti', {'id':automobilis1.id}) }}" class="btn btn-danger js-delete-btn btn-sm">Ištrinti automobilį</a>
+                </td>
+            </tr>
+        {% endfor %}
+
     </table>
 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-<script>
-    $(document).ready(function () {
-        $('.js-delete-btn').on('click', function () {
-            return confirm('Ar tikrai norite ištrinti automobilį?');
-        });
-    });
-</script>
+		<script>
+		    $(document).ready(function () {
+		        $('.js-delete-btn').on('click', function () {
+		            return confirm('Ar tikrai norite ištrinti automobilį?');
+		        });
+		    });
+		</script>
+
 {% endblock %}

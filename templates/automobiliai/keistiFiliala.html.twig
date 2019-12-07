@@ -1,19 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Automobilio filialo keitimas{% endblock %}
+{% block title %}Filialo keitimas automobiliui{% endblock %}
 
 {% block body %}
 
+      <h4>Keisti automobilio filialą</h4>
+      <p>Pasirinkite filialą:</p>
+			{{ form_start(form) }}
+	    {{ form_widget(form) }}
+	    <input type="submit" class="btn btn-primary" name="keistiFiliala" value="Keisti">
+	    {{ form_end(form) }}
 
-          <h4>Keisti automobilio filialą</h4>
-          <p>Pasirinkite filialą:</p>
-		  <form>
-		   <select class="form-control">
-				<option>Kauno</option>
-				<option>Vilniaus</option>
-				<option>Šiaulių</option>			  
-		   </select>
-		 <button type="submit" class="btn btn-primary">Pakeisti</button>
-		   </form>
-		   
 {% endblock %}
