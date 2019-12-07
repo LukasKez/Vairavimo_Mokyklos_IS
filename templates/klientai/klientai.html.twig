@@ -3,32 +3,36 @@
 {% block title %}Klientai{% endblock %}
 
 {% block body %}
-<h1>Klientų sąrašas:</h1>
-<a href="{{ path('app_klientaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti klientą</a>
-<table class="table">
-    <tr>
-        <th>Klientas</th>
-        <th>Funkcijos</th>
-    </tr>
-    <tr>
-        <td>Aidas Bieliauskas </td>
-        <td>
-            <a href="{{ path('app_klientaiProfilis') }}" class="btn btn-success">Peržiūrėti profilį</a>
-            <a href="{{ path('app_klientaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
-            <a href="{{ path('app_klientaiRedaguoti') }}" class="btn btn-primary">Redaguoti</a>
-            <a href="{{ path('app_klientaiIstrinti') }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
-            <a href="{{ path('app_klientaiEgzaminai') }}" class="btn btn-success">Pasirinkti egzaminą</a>
-        </td>
-    </tr>
+    <h1>Klientų sąrašas:</h1>
+    <a href="{{ path('app_klientaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti klientą</a>
 
-    {% endblock %}
-    {% block javascripts %}
-        {{ parent() }}
-        <script>
-            $(document).ready(function () {
-                $('.js-delete-btn').on('click', function () {
-                    return confirm('Ar tikrai norite ištrinti klientą?');
-                });
-            });
-        </script>
+    <table class="table">
+        <tr>
+            <th>Nr</th>
+            <th>Asmens kodas</th>
+            <th>Vardas</th>
+            <th>Pavardė</th>
+            <th>Gimimo metai</th>
+            <th>Telefono numeris</th>
+        </tr>
+        <tr>
+            {% for klientas in klientai %}
+        <tr>
+            <td>{{ klientas.id }}</td>
+            <td>{{ klientas.asmensKodas }}</td>
+            <td>{{ klientas.vardas }}</td>
+            <td>{{ klientas.pavarde }}</td>
+            <td>{{ klientas.gimimoMetai|date("Y-m-d", false) }}</td>
+            <td>{{ klientas.telefonoNumeris }}</td>
+
+            <td>
+                <a href="{{ path('app_klientaiIstrinti') }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
+                <a href="{{ path('app_klientaiProfilis') }}" class="btn btn-success">Peržiūrėti profilį</a>
+                <a href="{{ path('app_klientaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tr>
+    </table>
+
 {% endblock %}

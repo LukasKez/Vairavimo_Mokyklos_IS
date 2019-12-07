@@ -4,6 +4,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Klientas;
+use Doctrine\ORM\EntityManagerInterface;
+
+use Symfony\Component\HttpFoundation\Request;
 
 class KlientaiController extends AbstractController
 {
@@ -12,8 +16,12 @@ class KlientaiController extends AbstractController
      */
     public function index()
     {
+
+        $klientai = $this->getDoctrine()
+            ->getRepository(Klientas::class)
+            ->findAll();
         return $this->render('klientai/klientai.html.twig', [
-            'controller_name' => 'KlientaiController',
+            'klientai' => $klientai,
         ]);
     }
 
@@ -44,17 +52,46 @@ class KlientaiController extends AbstractController
         public function profile()
         {
 
-
+            $klientai = $this->getDoctrine()
+                ->getRepository(Klientas::class)
+                ->findAll();
             return $this->render('klientai/perziuretiprof.html.twig', [
-
+                'klientai' => $klientai,
             ]);
         }
 
+
+    /**
+     * @Route("/egzaminai/redaguoti/{slug}", name="app_redaguotiEgzamina")
+     */
+    public function update($slug)
+    {
+        $egzaminas = $this->getDoctrine()
+            ->getRepository(Egzaminas::class)
+            ->find($slug);
+        return $this->render('egzaminai/redaguoti_egzamina.html.twig', [
+            'egzaminas' => $egzaminas
+        ]);
+    }
         /**
          * @Route("/klientai/redaguoti", name="app_klientaiRedaguoti")
          */
-            public function edit()
-            {
+    public function edit(Request $request, $slug, EntityManagerInterface $entityManager)
+    {
+        $klientas = $this->getDoctrine()
+            ->getRepository(Klientas::class)
+            ->find($slug);
+
+
+        $klientas->setVardas($request->request->get('vardas'));
+        $klientas->setPavarde($request->request->get('pavarde'));
+        $klientas->setTelefonoNumeris($request->request->get('telefono_numeris'));
+        $klientas->setAsmensKodas($request->request->get('asmens_kodas'));
+        $date = new \DateTime($request->get('gimimo_metai'));
+        $klientas->GimimoMetai($date);
+
+
+        $entityManager->flush();
                 return $this->render('klientai/redaguotiprof.html.twig', [
                 'purpose' => 'Redaguoti',
                 ]);
