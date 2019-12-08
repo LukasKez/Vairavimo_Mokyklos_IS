@@ -129,7 +129,7 @@ class Instruktorius
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\InstruktoriausTvarkarastis", mappedBy="instruktorius")
      */
-    private $tvarkarasciai;
+    public $tvarkarasciai;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\LaikomasEgzaminas", mappedBy="instruktorius")

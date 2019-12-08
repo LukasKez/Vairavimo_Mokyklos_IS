@@ -5,9 +5,10 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Instruktorius;
+use App\Entity\InstruktoriausTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\InstruktoriaiFormType;
-
+use App\Form\InstruktoriausTvarkarastisFormType;
 use Symfony\Component\HttpFoundation\Request;
 
 class InstruktoriaiController extends AbstractController
@@ -116,44 +117,96 @@ class InstruktoriaiController extends AbstractController
     }
 
     /**
-     * @Route("/instruktoriai/instr", name="app_instruktoriaiInstruktoriai")
+     * @Route("/instruktoriai/tvarkarastis/{insId}", name="app_instruktoriaiTvarkarastis")
      */
-    public function salary()
+    public function tvarkarastis($insId)
     {
+        
+       $entityManager = $this->getDoctrine()->getManager();
+
+       $conn = $this->getDoctrine()->getManager()->getConnection();
+
+       $sql = "SELECT * FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId'";
+       
+       $stmt = $conn->prepare($sql);
+       $stmt->execute();
 
 
-        return $this->render('instruktoriai/instruktoriai.html.twig', [
-
-        ]);
-    }
-
-    /**
-     * @Route("/instruktoriai/tvarkarastis", name="app_instruktoriaiTvarkarastis")
-     */
-    public function tvarkarastis()
-    {
         return $this->render('instruktoriai/tvarkarastis.html.twig', [
-
+            'tvarks' => $stmt->fetchAll()
         ]);
     }
 
     /**
-     * @Route("/instruktoriai/tvarkarastis/redaguoti", name="app_instruktoriaiRedaguotiTvarkarasti")
+     * @Route("/instruktoriai/tvarkarastis/{insId}/redaguoti/{tvarkId}", name="app_instruktoriaiRedaguotiTvarkarasti")
      */
-    public function tvarkarastisRedaguoti()
+    public function tvarkarastisRedaguoti($insId, $tvarkId)
     {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $conn = $this->getDoctrine()->getManager()->getConnection();
+ 
+        $sql = "SELECT * FROM instruktoriaus_tvarkarastis WHERE id = '$tvarkId'";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $tvarkarastis = $stmt->fetchAll();
+ 
+        $form = $this->createForm(InstruktoriausTvarkarastisFormType::class, $tvarkarastis);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $tvarkarastis = $form->getData();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($tvarkarastis);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Tvarkaraštis paredaguotas');
+            return $this->redirectToRoute('app_instruktoriaiTvarkarastis');
+        }
+
         return $this->render('instruktoriai/tvarkarastis-redaguoti.html.twig', [
-
+            'purpose' => 'Redaguoti',
+            'object' => 'tvarkaraštį',
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/instruktoriai/alga", name="app_instruktoriaiAlga")
+     * @Route("/instruktoriai/{insId}/alga", name="app_instruktoriaiAlga")
      */
-    public function skaiciuotiAlga()
+    public function skaiciuotiAlga($insId)
     {
-        return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
+        if (empty($_GET)) {
+            // no data passed by get
+        } else {
+            $month = $_GET['menuo'];
+            $menuo = $month ;
+            $entityManager = $this->getDoctrine()->getManager();
 
+            $conn = $this->getDoctrine()->getManager()->getConnection();
+      
+            $sql = "SELECT SUM(HOUR(TIMEDIFF(pradzia, pabaiga))) as laikas FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId' AND MONTH(pradzia) = MONTH('$menuo')";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+
+            $row = $stmt->fetch();
+            $alga = $row['laikas'] * 5;
+            return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
+                'menuo' => $month,
+                'laikas' => $row['laikas'],
+                'alga' => $alga
+            ]);
+        }
+      
+
+        return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
+                'menuo' => "pasirinktą",
+                'laikas' => 0,
+                'alga' => 0
         ]);
     }
 

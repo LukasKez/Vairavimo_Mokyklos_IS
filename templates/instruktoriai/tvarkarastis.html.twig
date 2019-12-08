@@ -4,5 +4,28 @@
 
 {% block body %}
     <h1>Instruktoriaus tvarkaraštis</h1>
-    <a href="{{ path('app_instruktoriaiRedaguotiTvarkarasti') }}" class="btn btn-primary">Redaguoti tvarkaraštį</a>
+
+    <table class="table">
+    
+        <tr>
+            <th>Pravažiavimo pradzia</th>
+            <th>Pravažiavimo pabaiga</th>
+        </tr>
+
+        <tr>
+            {% for tvark in tvarks %}
+            <tr>
+            
+            <td>{{ tvark.pradzia|date("Y-m-d G:i:s") }}</td>
+            <td>{{ tvark.pabaiga|date("Y-m-d G:i:s") }}</td>
+
+            <td>
+                <a href="{{ path('app_instruktoriaiRedaguotiTvarkarasti', {'insId':tvark.instruktorius, 'tvarkId':tvark.id}) }}" class="btn btn-primary">Redaguoti tvarkaraštį</a>
+            </td>
+            </tr>
+            {% endfor %}
+        </tr>
+
+    </table>
+
 {% endblock %}
