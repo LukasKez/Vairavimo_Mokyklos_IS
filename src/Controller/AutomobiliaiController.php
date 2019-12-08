@@ -44,6 +44,8 @@ class AutomobiliaiController extends AbstractController
      */
     public function add(Request $request)
     {
+        $modeliai = $this->getDoctrine()->getRepository(Modelis::class)->findAll();
+
           $form = $this->createForm(AutomobiliaiType::class);
           $request = Request::createFromGlobals();
           $rez = $request->get('automobiliai');
@@ -97,6 +99,7 @@ class AutomobiliaiController extends AbstractController
         return $this->render('automobiliai/prideti.html.twig', [
           'purpose' => 'Pridėti',
           'form' => $form->createView(),
+          'modeliai' => $modeliai
       ]);
 
     }
