@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Klientas;
 use Doctrine\ORM\EntityManagerInterface;
-
+use App\Form\KlientaiFormType;
 use Symfony\Component\HttpFoundation\Request;
 
 class KlientaiController extends AbstractController
@@ -28,12 +28,30 @@ class KlientaiController extends AbstractController
     /**
     * @Route ("/klientai/prideti", name="app_klientaiPrideti")
     */
-    public function add()
+    public function add(Request $request)
     {
-        return $this->render('klientai/pridetikl.html.twig', [
-                'purpose' => 'Prideti'
+        $form = $this->createForm(KlientaiFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $klientas = $form->getData();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($klientas);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Klientas pridėtas');
+            return $this->redirectToRoute('app_klientai');
+        }
+        return $this->render('klientai/forma.html.twig', [
+                'purpose' => 'Prideti',
+                'object' => 'klientą',
+                'form' => $form->createView(),
                 ]);
     }
+
+
 
     /**
          * @Route("/klientai/istrinti/{id}", name="app_klientaiIstrinti")
