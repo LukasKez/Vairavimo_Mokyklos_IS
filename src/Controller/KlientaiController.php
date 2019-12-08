@@ -36,25 +36,40 @@ class KlientaiController extends AbstractController
     }
 
     /**
-         * @Route("/klientai/istrinti", name="app_klientaiIstrinti")
+         * @Route("/klientai/istrinti/{id}", name="app_klientaiIstrinti")
          */
-        public function delete()
+        public function delete($id)
         {
+            $klientai = $this->getDoctrine()
+                ->getRepository(Klientas::class)
+                ->findAll();
+            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->find($id);
+
+            if ($klientas != null)
+            {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($klientas);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Klientas ištrintas');
+                return $this->redirectToRoute('app_klientai');
+            }
 
             return $this->render('klientai/klientai.html.twig', [
-
+                'klientai' => $klientai,
             ]);
+
         }
 
         /**
-         * @Route("/klientai/profilis", name="app_klientaiProfilis")
+         * @Route("/klientai/profilis/{klientasID}", name="app_klientaiProfilis")
          */
-        public function profile()
+        public function profile($klientasID)
         {
 
             $klientai = $this->getDoctrine()
                 ->getRepository(Klientas::class)
-                ->findAll();
+                ->find($klientasID);
             return $this->render('klientai/perziuretiprof.html.twig', [
                 'klientai' => $klientai,
             ]);
@@ -74,13 +89,13 @@ class KlientaiController extends AbstractController
         ]);
     }
         /**
-         * @Route("/klientai/redaguoti", name="app_klientaiRedaguoti")
+         * @Route("/klientai/redaguoti/{klientasID}", name="app_klientaiRedaguoti")
          */
-    public function edit(Request $request, $slug, EntityManagerInterface $entityManager)
+    public function edit($klientasID, Request $request, EntityManagerInterface $entityManager)
     {
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
-            ->find($slug);
+            ->find($klientasID);
 
 
         $klientas->setVardas($request->request->get('vardas'));

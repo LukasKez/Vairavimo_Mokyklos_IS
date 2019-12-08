@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>Profilis</h1>
-    <a href="{{ path('app_klientaiRedaguoti') }}" class="btn btn-primary my-1 float-right">Redaguoti profilį</a>
+
     <table class="table">
 
         <tr>
@@ -15,6 +15,8 @@
             <th>Gimimo metai</th>
             <th>Telefono numeris</th>
             <th>El. paštas</th>
+
+
         </tr>
         <tr>
             {% for klientas in klientai %}
@@ -25,7 +27,7 @@
             <td>{{ klientas.pavarde }}</td>
             <td>{{ klientas.gimimoMetai|date("Y-m-d", false) }}</td>
             <td>{{ klientas.telefonoNumeris }}</td>
-<td>{{ klientas.naudotojoId. }}</td>
+            <a href="{{ path('app_klientaiProfilis', {'klientasID':klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
             <td>
             </tr>
         {% endfor %}

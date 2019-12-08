@@ -20,7 +20,7 @@
             <a href="{{ path('app_klientaiEgzaminai') }}" class="btn btn-success">Pasirinkti egzaminą</a>
         </td>
     </tr>
-
+<a href="{{ path('app_klientaiIstrinti',klientas.id) }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
     {% endblock %}
     {% block javascripts %}
         {{ parent() }}
