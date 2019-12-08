@@ -6,40 +6,32 @@
     <h1>Instruktorių sąrašas:</h1>
     <a href="{{ path('app_instruktoriaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti Instruktorių</a>
     <a href="{{ path('app_instruktoriaiAlga') }}" class="btn btn-success my-1 float-right">Skaičiuoti algą</a>
+
     <table class="table">
         <tr>
-            <th>Instruktorius</th>
-            <th>Funkcijos</th>
+            <th>Nr</th>
+            <th>Vardas</th>
+            <th>Pavardė</th>
+            <th>Tel. numeris</th>
+            <th>Vairavimo stažas</th>
         </tr>
         <tr>
-            <td>Lukas Rimkus </td>
+            {% for instruktorius in instruktoriai %}
+        <tr>
+            <td>{{ instruktorius.id }}</td>
+            <td>{{ instruktorius.vardas }}</td>
+            <td>{{ instruktorius.pavarde }}</td>
+            <td>{{ instruktorius.telefono_numeris }}</td>
+            <td>{{ instruktorius.vairavimo_stazas_metais }}</td>
+
             <td>
-                <a href="{{ path('app_instruktoriaiProfilis') }}" class="btn btn-success">Peržiūrėti profilį</a>
-                <a href="{{ path('app_instruktoriaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
-                <a href="{{ path('app_instruktoriaiRedaguoti') }}" class="btn btn-primary">Redaguoti</a>
-                <a href="{{ path('app_instruktoriaiIstrinti') }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
+                <a href="{{ path('app_instruktoriaiProfilis', {'insId':instruktorius.id}) }}" class="btn btn-success">Peržiūrėti profilį</a>
+                <a href="{{ path('app_instruktoriaiTvarkarastis', {'insId':instruktorius.id}) }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
+                <a href="{{ path('app_instruktoriaiRedaguoti', {'insId':instruktorius.id}) }}" class="btn btn-primary">Redaguoti</a>
+                <a href="{{ path('app_instruktoriaiIstrinti', {'insId':instruktorius.id}) }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
             </td>
         </tr>
-        <tr>
-            <td>Lukas Bimkus</td>
-            <td>
-                <a href="{{ path('app_instruktoriaiProfilis') }}" class="btn btn-success">Peržiūrėti profilį</a>
-                <a href="{{ path('app_instruktoriaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
-                <a href="{{ path('app_instruktoriaiRedaguoti') }}" class="btn btn-primary">Redaguoti</a>
-                <a href="{{ path('app_instruktoriaiIstrinti') }}" class="btn btn-danger">Ištrinti</a>
-            </td>
+        {% endfor %}
         </tr>
     </table>
-
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-<script>
-    $(document).ready(function () {
-        $('.js-delete-btn').on('click', function () {
-            return confirm('Ar tikrai norite istrinti Instruktorių?');
-        });
-    });
-</script>
 {% endblock %}

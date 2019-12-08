@@ -4,7 +4,11 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Instruktorius;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Form\InstruktoriaiFormType;
 
+use Symfony\Component\HttpFoundation\Request;
 
 class InstruktoriaiController extends AbstractController
 {
@@ -13,36 +17,86 @@ class InstruktoriaiController extends AbstractController
      */
     public function index()
     {
+        $instruktoriai = $this->getDoctrine()
+            ->getRepository(Instruktorius::class)
+            ->findAll();
         return $this->render('instruktoriai/instruktoriai.html.twig', [
-
+            'instruktoriai' => $instruktoriai,
         ]);
     }
 
     /**
      * @Route("/instruktoriai/prideti", name="app_instruktoriaiPrideti")
      */
-    public function add()
+    public function add(Request $request)
     {
-        return $this->render('instruktoriai/prideti.html.twig', [
-        'purpose' => 'Prideti'
+        $form = $this->createForm(InstruktoriaiFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $instruktorius = $form->getData();
+
+             $entityManager = $this->getDoctrine()->getManager();
+             $entityManager->persist($instruktorius);
+             $entityManager->flush();
+
+             $this->addFlash('success', 'Instruktorius pridėtas');
+             return $this->redirectToRoute('app_instruktoriai');
+        }
+
+        return $this->render('instruktoriai/insforma.html.twig', [
+            'purpose' => 'Pridėti',
+            'object' => 'instruktorių',
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/instruktoriai/redaguoti", name="app_instruktoriaiRedaguoti")
+     * @Route("/instruktoriai/redaguoti/{insId}", name="app_instruktoriaiRedaguoti")
      */
-    public function edit()
+    public function edit($insId, Request $request)
     {
-        return $this->render('instruktoriai/prideti.html.twig', [
-        'purpose' => 'Redaguoti',
+        $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
+        $form = $this->createForm(InstruktoriaiFormType::class, $instruktorius);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $instruktorius = $form->getData();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($instruktorius);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Instruktorius paredaguotas');
+            return $this->redirectToRoute('app_instruktoriai');
+        }
+
+        return $this->render('instruktoriai/insforma.html.twig', [
+            'purpose' => 'Redaguoti',
+            'object' => 'instruktorių',
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/instruktoriai/istrinti", name="app_instruktoriaiIstrinti")
+     * @Route("/instruktoriai/istrinti/{insId}", name="app_instruktoriaiIstrinti")
      */
-    public function delete()
+    public function delete($insId)
     {
+
+        $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
+
+        if ($instruktorius != null)
+        {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($instruktorius);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Instruktorius ištrintas');
+            return $this->redirectToRoute('app_instruktoriai');
+        }
 
         return $this->render('instruktoriai/instruktoriai.html.twig', [
 
@@ -50,14 +104,14 @@ class InstruktoriaiController extends AbstractController
     }
 
     /**
-     * @Route("/instruktoriai/profilis", name="app_instruktoriaiProfilis")
+     * @Route("/instruktoriai/profilis/{insId}", name="app_instruktoriaiProfilis")
      */
-    public function profile()
+    public function profile($insId)
     {
-
+        $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
 
         return $this->render('instruktoriai/profilis.html.twig', [
-
+            'instr' => $instruktorius,
         ]);
     }
 
