@@ -19,7 +19,7 @@
 
         </tr>
         <tr>
-            {% for klientas in klientai %}
+
         <tr>
             <td>{{ klientas.id }}</td>
             <td>{{ klientas.asmensKodas }}</td>
@@ -27,10 +27,12 @@
             <td>{{ klientas.pavarde }}</td>
             <td>{{ klientas.gimimoMetai|date("Y-m-d", false) }}</td>
             <td>{{ klientas.telefonoNumeris }}</td>
-            <a href="{{ path('app_klientaiProfilis', {'klientasID':klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
+            <td>{{ app.user.email }}</td>
+
+            <a href="{{ path('app_klientaiRedaguoti', {'klientasID':klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
             <td>
             </tr>
-        {% endfor %}
+
     </table>
 
 {% endblock %}
