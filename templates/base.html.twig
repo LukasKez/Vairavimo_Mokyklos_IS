@@ -17,10 +17,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                {% if is_granted("ROLE_ADMIN") %}
-
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="{{ path('app_login') }}">Prisijungti</a>
+                {% if is_granted("ROLE_ADMIN") %}
                     <a class="nav-item nav-link" href="{{ path('app_klientai') }}">Klientai</a>
                     <a class="nav-item nav-link" href="{{ path('app_instruktoriai') }}">Instruktoriai</a>
                     <a class="nav-item nav-link" href="{{ path('app_filialai') }}">Filialai</a>
@@ -28,10 +26,7 @@
                     <a class="nav-item nav-link" href="{{ path('app_egzaminai') }}">Egzaminai</a>
                     <a class="nav-item nav-link" href="{{ path('app_perziuretiTaisykles') }}">Taisyklės</a>
                     <a class="nav-item nav-link" href="{{ path('app_logout') }}">Atsijungti</a>
-                </div>
-
                 {% elseif is_granted("ROLE_KLIENTAS") %}
-
                     <a class="nav-item nav-link" href="{{ path('app_klientaiProfilis') }}">Peržiūrėti profilį</a>
                     <a class="nav-item nav-link" href="{{ path('app_logout') }}">Atsijungti</a>
                 {% elseif is_granted("ROLE_INSTRUKTORIUS") %}
@@ -45,6 +40,7 @@
                 {% else %}
                     <a class="nav-item nav-link" href="{{ path('app_login') }}">Prisijungti</a>
                 {% endif %}
+                </div>
             </div>
         </nav>
     {% endblock %}
