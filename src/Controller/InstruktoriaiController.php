@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Instruktorius;
 use App\Entity\InstruktoriausTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\DriverManager;
 use App\Form\InstruktoriaiFormType;
 use App\Form\InstruktoriausTvarkarastisFormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -111,8 +112,15 @@ class InstruktoriaiController extends AbstractController
     {
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
 
+        $entityManager = $this->getDoctrine()->getManager();
+        $conn = $this->getDoctrine()->getManager()->getConnection();
+        $sql = "SELECT pavadinimas FROM filialas WHERE id = (select instruktorius.filialo_id from instruktorius where instruktorius.id = '$insId')";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
         return $this->render('instruktoriai/profilis.html.twig', [
             'instr' => $instruktorius,
+            'filialas' => $stmt->fetch()
         ]);
     }
 
@@ -138,20 +146,12 @@ class InstruktoriaiController extends AbstractController
     }
 
     /**
-     * @Route("/instruktoriai/tvarkarastis/{insId}/redaguoti/{tvarkId}", name="app_instruktoriaiRedaguotiTvarkarasti")
+     * @Route("/instruktoriai/tvarkarastis/redaguoti/{tvarkId}", name="app_instruktoriaiRedaguotiTvarkarasti")
      */
-    public function tvarkarastisRedaguoti($insId, $tvarkId)
+    public function tvarkarastisRedaguoti($tvarkId, Request $request)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $tvarkarastis = $this->getDoctrine()->getRepository(Instruktorius::class)->find($tvarkId);
 
-        $conn = $this->getDoctrine()->getManager()->getConnection();
- 
-        $sql = "SELECT * FROM instruktoriaus_tvarkarastis WHERE id = '$tvarkId'";
-        
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $tvarkarastis = $stmt->fetchAll();
- 
         $form = $this->createForm(InstruktoriausTvarkarastisFormType::class, $tvarkarastis);
         $form->handleRequest($request);
 
@@ -159,12 +159,12 @@ class InstruktoriaiController extends AbstractController
         {
             $tvarkarastis = $form->getData();
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tvarkarastis);
-            $entityManager->flush();
+           $entityManager1 = $this->getDoctrine()->getManager();
+           $entityManager1->persist($tvarkarastis);
+           $entityManager1->flush();
 
             $this->addFlash('success', 'Tvarkaraštis paredaguotas');
-            return $this->redirectToRoute('app_instruktoriaiTvarkarastis');
+            return $this->redirectToRoute('app_instruktoriai');
         }
 
         return $this->render('instruktoriai/tvarkarastis-redaguoti.html.twig', [
@@ -194,7 +194,7 @@ class InstruktoriaiController extends AbstractController
             $stmt->execute();
 
             $row = $stmt->fetch();
-            $alga = $row['laikas'] * 5;
+            $alga = $row['laikas'] * 15;
             return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
                 'menuo' => $month,
                 'laikas' => $row['laikas'],

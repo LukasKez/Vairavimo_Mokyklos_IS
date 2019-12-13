@@ -17,10 +17,10 @@ class InstruktoriausTvarkarastisFormType extends AbstractType
     {
         $builder
             ->add('pradzia', DateTimeType::class, [
-                'placeholder' => 'Select a value',
+                'placeholder' => 'Pasirinkti',
             ])
             ->add('pabaiga', DateTimeType::class, [
-                'placeholder' => 'Select a value',
+                'placeholder' => 'Pasirinkti',
             ])
         ;
     }

@@ -20,7 +20,7 @@
             <td>{{ tvark.pabaiga|date("Y-m-d G:i:s") }}</td>
 
             <td>
-                <a href="{{ path('app_instruktoriaiRedaguotiTvarkarasti', {'insId':tvark.instruktorius, 'tvarkId':tvark.id}) }}" class="btn btn-primary">Redaguoti tvarkaraštį</a>
+                <a href="{{ path('app_instruktoriaiRedaguotiTvarkarasti', {'tvarkId':tvark.id}) }}" class="btn btn-primary">Redaguoti tvarkaraštį</a>
             </td>
             </tr>
             {% endfor %}
