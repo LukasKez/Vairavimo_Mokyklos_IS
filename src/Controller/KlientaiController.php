@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Klientas;
 use App\Entity\Naudotojas;
+use App\Entity\KlientoTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\KlientaiFormType;
 use App\Form\KlientaiRedaguotiFormType;
@@ -177,10 +178,30 @@ class KlientaiController extends AbstractController
          */
         public function tvarkarastis()
         {
+            $naudotojas = $this->getUser();
+            $naudotojas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $naudotojas]);
+            $naudotojas = $naudotojas->getId();
+            $entityManager = $this->getDoctrine()->getManager();
 
+            $conn = $this->getDoctrine()->getManager()->getConnection();
 
+            $sql = "SELECT * FROM kliento_tvarkarastis 
+                    JOIN pravaziavimas ON pravaziavimas.kliento_tvarkarastis = kliento_tvarkarastis.id
+                        WHERE klientas = '$naudotojas'";
+                $sql1 = "SELECT * FROM kliento_tvarkarastis 
+                        JOIN kliento_tvarkarascio_egzaminas ON kliento_tvarkarastis_id = kliento_tvarkarastis.id
+                        JOIN egzaminas ON kliento_tvarkarascio_egzaminas.egzaminas_id = egzaminas.id
+                        JOIN egzaminu_tipai ON egzaminu_tipai.id = egzaminas.tipas
+                        WHERE klientas = '$naudotojas'";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt1 = $conn->prepare($sql1);
+            $stmt->execute();
+            $stmt1->execute();
+       
             return $this->render('klientai/perziuretitvark.html.twig', [
-
+                'pravaziavimai' => $stmt->fetchAll(),
+                'egzaminai' => $stmt1->fetchAll(),
             ]);
         }
 

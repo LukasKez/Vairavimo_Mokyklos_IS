@@ -5,6 +5,49 @@
 {% block body %}
     <h1>Kliento tvarkaraštis</h1>
 
-    <a href="{{ path('app_klientaiProgresas') }}" class="btn btn-success">Peržiūrėti progresą</a>
+    <a href="{{ path('app_klientaiProgresas') }}" class="btn btn-success my-1 float-right">Peržiūrėti progresą</a>
 
+    <br/>
+    <h5>Pravažiavimai</h5>
+    <table class="table">
+    
+        <tr>
+            <th>Pravažiavimo pradzia</th>
+            <th>Pravažiavimo pabaiga</th>
+            <th>Įvertinimas</th>
+        </tr>
+
+        <tr>
+            {% for pravaziavimas in pravaziavimai %}
+            <tr>
+            
+            <td>{{ pravaziavimas.pradzia|date("Y-m-d G:i:s") }}</td>
+            <td style="text-align: left">{{ pravaziavimas.pabaiga|date("Y-m-d G:i:s") }}</td>
+            <td style="text-align: left">{{ pravaziavimas.ivertinimas }}</td>
+            </tr>
+            {% endfor %}
+        </tr>
+
+    </table>
+
+    <h5>Egzaminai</h5>
+    <table class="table">
+    
+        <tr>
+            <th>Tipas</th>
+            <th>Data ir laikas</th>
+            <th>Adresas</th>
+        </tr>
+
+        <tr>
+            {% for egzaminas in egzaminai %}
+            <tr>
+            <td>{{ egzaminas.name }}</td>
+            <td>{{ egzaminas.data|date("Y-m-d G:i:s") }}</td>
+            <td style="text-align: left">{{ egzaminas.adresas }}</td>
+            </tr>
+            {% endfor %}
+        </tr>
+
+    </table>
 {% endblock %}
