@@ -8,6 +8,8 @@ use App\Entity\Klientas;
 use App\Entity\Naudotojas;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\KlientaiFormType;
+use App\Form\LaiskoFormType;
+use App\Form\PriminimoFormType;
 use Symfony\Component\HttpFoundation\Request;
 
 class KlientaiController extends AbstractController
@@ -171,12 +173,41 @@ class KlientaiController extends AbstractController
         /**
          * @Route("/klientai/priminti", name="app_klientaiPriminti")
          */
-        public function priminti()
+        public function priminti(Request $request, \Swift_Mailer $mailer)
         {
 
+$form = $this->createForm(PriminimoFormType::class);
+                $form->handleRequest($request);
 
-            return $this->render('klientai/priminti.html.twig', [
+                 if ($form->isSubmitted() && $form->isValid())
+                                {
+                                    $data = $form->getData();
 
-            ]);
+                                    $message = (new \Swift_Message('Priminimas apie egzaminą'))
+                                        ->setFrom('sentinelisko@gmail.com')
+                                        ->setTo($data['Kam'])
+                                        ->setBody(
+                                            $this->renderView(
+                                                'klientai/laisko_forma.html.twig',
+                                                ['data' => $data]
+                                            ),
+                                            'text/html'
+                                        )
+                                    ;
+
+                                    //dd($message);
+                                    $mailer->send($message);
+
+                                    $this->addFlash('success', 'Laiškas sėkmingai išsiųstas');
+                                    return $this->redirectToRoute('app_egzaminai');
+                                }
+           return $this->render('klientai/siusti_laiska.html.twig', [
+                               'form' => $form->createView()
+                           ]);
+
+
         }
+
+
+
 }

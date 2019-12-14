@@ -6,6 +6,7 @@
     {% if is_granted('ROLE_KLIENTAS') %}
         <h1>Egzaminų sąrašas:</h1>
         <a href="{{ path('app_perziuretiVidurki') }}" class="btn btn-primary my-1 float-right">Peržiūrėti bendrą vidurkį</a>
+        <a href="{{ path('app_klientaiPriminti') }}" class="btn btn-primary my-1 float-right">Siųsti laišką</a>
         <table class="table">
             <tr>
                 <th>Nr</th>
