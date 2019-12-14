@@ -5,10 +5,15 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Instruktorius;
+use App\Entity\InstruktoriausTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\DriverManager;
 use App\Form\InstruktoriaiFormType;
-
+use App\Form\InstruktoriaiRedaguotiFormType;
+use App\Form\InstruktoriausTvarkarastisFormType;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Naudotojas;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class InstruktoriaiController extends AbstractController
 {
@@ -28,18 +33,49 @@ class InstruktoriaiController extends AbstractController
     /**
      * @Route("/instruktoriai/prideti", name="app_instruktoriaiPrideti")
      */
-    public function add(Request $request)
+    public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $form = $this->createForm(InstruktoriaiFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $instruktorius = $form->getData();
+            $data = $form->getData();
+            
+            $naudotojas = $this->getDoctrine()
+            ->getRepository(Naudotojas::class)
+            ->findOneBy(['email' => $data['el_pastas']]);
+            if($naudotojas != null){
+                return $this->render('instruktoriai/insforma.html.twig', [
+                    'purpose' => 'Pridėti',
+                    'object' => 'instruktorių',
+                    'form' => $form->createView(),
+                    'error' => 'Toks el. pašto adresas jau egzistuoja.'
+                ]);
+            }
+            $naudotojas = new Naudotojas();
+            $naudotojas->setEmail($data['el_pastas']);
+            $role[] = 'ROLE_INSTRUKTORIUS';
+            $naudotojas->setRoles($role);
+            $naudotojas->setPassword($passwordEncoder->encodePassword(
+                             $naudotojas,
+                             $data['slaptazodis']
+                         ));
+            $instruktorius = new Instruktorius();
+            $instruktorius->setAsmensKodas($data['asmens_kodas']);
+            $instruktorius->setVardas($data['vardas']);
+            $instruktorius->setPavarde($data['pavarde']);
+            $instruktorius->setGimimoData($data['gimimo_data']);
+            $instruktorius->setVairavimoStazasMetais($data['vairavimo_stazas_metais']);
+            $instruktorius->setTelefonoNumeris($data['telefono_numeris']);
+            $instruktorius->setFilialas($data['filialas']);
+            $instruktorius->setNaudotojoId($naudotojas);
 
-             $entityManager = $this->getDoctrine()->getManager();
-             $entityManager->persist($instruktorius);
-             $entityManager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($naudotojas);
+            $entityManager->persist($instruktorius);
+            $entityManager->flush();
+            
 
              $this->addFlash('success', 'Instruktorius pridėtas');
              return $this->redirectToRoute('app_instruktoriai');
@@ -58,7 +94,7 @@ class InstruktoriaiController extends AbstractController
     public function edit($insId, Request $request)
     {
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
-        $form = $this->createForm(InstruktoriaiFormType::class, $instruktorius);
+        $form = $this->createForm(InstruktoriaiRedaguotiFormType::class, $instruktorius);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
@@ -110,50 +146,101 @@ class InstruktoriaiController extends AbstractController
     {
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
 
+        $entityManager = $this->getDoctrine()->getManager();
+        $conn = $this->getDoctrine()->getManager()->getConnection();
+        $sql = "SELECT pavadinimas FROM filialas WHERE id = (select instruktorius.filialo_id from instruktorius where instruktorius.id = '$insId')";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
         return $this->render('instruktoriai/profilis.html.twig', [
             'instr' => $instruktorius,
+            'filialas' => $stmt->fetch()
         ]);
     }
 
     /**
-     * @Route("/instruktoriai/instr", name="app_instruktoriaiInstruktoriai")
+     * @Route("/instruktoriai/tvarkarastis/{insId}", name="app_instruktoriaiTvarkarastis")
      */
-    public function salary()
+    public function tvarkarastis($insId)
     {
+        
+       $entityManager = $this->getDoctrine()->getManager();
+
+       $conn = $this->getDoctrine()->getManager()->getConnection();
+
+       $sql = "SELECT * FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId'";
+       
+       $stmt = $conn->prepare($sql);
+       $stmt->execute();
 
 
-        return $this->render('instruktoriai/instruktoriai.html.twig', [
-
-        ]);
-    }
-
-    /**
-     * @Route("/instruktoriai/tvarkarastis", name="app_instruktoriaiTvarkarastis")
-     */
-    public function tvarkarastis()
-    {
         return $this->render('instruktoriai/tvarkarastis.html.twig', [
-
+            'tvarks' => $stmt->fetchAll()
         ]);
     }
 
     /**
-     * @Route("/instruktoriai/tvarkarastis/redaguoti", name="app_instruktoriaiRedaguotiTvarkarasti")
+     * @Route("/instruktoriai/tvarkarastis/redaguoti/{tvarkId}", name="app_instruktoriaiRedaguotiTvarkarasti")
      */
-    public function tvarkarastisRedaguoti()
+    public function tvarkarastisRedaguoti($tvarkId, Request $request)
     {
+        $tvarkarastis = $this->getDoctrine()->getRepository(Instruktorius::class)->find($tvarkId);
+
+        $form = $this->createForm(InstruktoriausTvarkarastisFormType::class, $tvarkarastis);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $tvarkarastis = $form->getData();
+
+           $entityManager1 = $this->getDoctrine()->getManager();
+           $entityManager1->persist($tvarkarastis);
+           $entityManager1->flush();
+
+            $this->addFlash('success', 'Tvarkaraštis paredaguotas');
+            return $this->redirectToRoute('app_instruktoriai');
+        }
+
         return $this->render('instruktoriai/tvarkarastis-redaguoti.html.twig', [
-
+            'purpose' => 'Redaguoti',
+            'object' => 'tvarkaraštį',
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/instruktoriai/alga", name="app_instruktoriaiAlga")
+     * @Route("/instruktoriai/{insId}/alga", name="app_instruktoriaiAlga")
      */
-    public function skaiciuotiAlga()
+    public function skaiciuotiAlga($insId)
     {
-        return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
+        if (empty($_GET)) {
+            // no data passed by get
+        } else {
+            $month = $_GET['menuo'];
+            $menuo = $month ;
+            $entityManager = $this->getDoctrine()->getManager();
 
+            $conn = $this->getDoctrine()->getManager()->getConnection();
+      
+            $sql = "SELECT SUM(HOUR(TIMEDIFF(pradzia, pabaiga))) as laikas FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId' AND MONTH(pradzia) = MONTH('$menuo')";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+
+            $row = $stmt->fetch();
+            $alga = $row['laikas'] * 15;
+            return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
+                'menuo' => $month,
+                'laikas' => $row['laikas'],
+                'alga' => $alga
+            ]);
+        }
+      
+
+        return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
+                'menuo' => "pasirinktą",
+                'laikas' => 0,
+                'alga' => 0
         ]);
     }
 

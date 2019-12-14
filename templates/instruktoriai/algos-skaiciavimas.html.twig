@@ -4,4 +4,16 @@
 
 {% block body %}
     <h1>Algos skaičiavimas</h1>
+    <br>
+    <h3>Kurio mėnesio algą suskaičiuoti?</h3>
+
+    <form action="#">
+        <input type="date" id="menuo" name="menuo" min="2019-01" value="2019-12">
+        <br>
+        <br>
+        <input type="submit" value="Skaičiuoti">
+    </form>
+    <br>
+    <h3>Per {{menuo}} mėnesį pradirbta {{laikas}} valandų. </h3>
+    <h3>Atlyginimas: {{alga}}€ </h3>
 {% endblock %}

@@ -2,10 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Egzaminas;
-use App\Entity\EgzaminuTipai;
-use Cassandra\Date;
-use Cassandra\Time;
+use App\Entity\InstruktoriausTvarkarastis;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -14,26 +11,24 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EgzaminasFormType extends AbstractType
+class InstruktoriausTvarkarastisFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('EgzaminoTipas', EntityType::class, [
-                'class' => EgzaminuTipai::class,
-                'choice_label' => 'name',
+            ->add('pradzia', DateTimeType::class, [
+                'placeholder' => 'Pasirinkti',
             ])
-            ->add('data_ir_laikas', DateTimeType::class, [
-                'required'=>'true'
+            ->add('pabaiga', DateTimeType::class, [
+                'placeholder' => 'Pasirinkti',
             ])
-            ->add('adresas')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            
+            'data_class' => InstruktoriausTvarkarastis::class,
         ]);
     }
 }

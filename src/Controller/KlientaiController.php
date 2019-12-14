@@ -8,9 +8,15 @@ use App\Entity\Klientas;
 use App\Entity\Naudotojas;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\KlientaiFormType;
+<<<<<<< HEAD
 use App\Form\LaiskoFormType;
 use App\Form\PriminimoFormType;
+=======
+use App\Form\KlientaiRedaguotiFormType;
+>>>>>>> origin/master
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
 
 class KlientaiController extends AbstractController
 {
@@ -31,16 +37,44 @@ class KlientaiController extends AbstractController
     /**
     * @Route ("/klientai/prideti", name="app_klientaiPrideti")
     */
-    public function add(Request $request)
+    public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $form = $this->createForm(KlientaiFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $klientas = $form->getData();
+            $data = $form->getData();
+
+            $naudotojas = $this->getDoctrine()
+            ->getRepository(Naudotojas::class)
+            ->findOneBy(['email' => $data['el_pastas']]);
+            if($naudotojas != null){
+                return $this->render('klientai/forma.html.twig', [
+                    'purpose' => 'Pridėti',
+                    'object' => 'klientą',
+                    'form' => $form->createView(),
+                    'error' => 'Toks el. pašto adresas jau egzistuoja.'
+                    ]);
+            }
+            $naudotojas = new Naudotojas();
+            $naudotojas->setEmail($data['el_pastas']);
+            $role[] = 'ROLE_KLIENTAS';
+            $naudotojas->setRoles($role);
+            $naudotojas->setPassword($passwordEncoder->encodePassword(
+                             $naudotojas,
+                             $data['slaptazodis']
+                         ));
+            $klientas = new Klientas();
+            $klientas->setAsmensKodas($data['asmens_kodas']);
+            $klientas->setVardas($data['vardas']);
+            $klientas->setPavarde($data['pavarde']);
+            $klientas->setGimimoMetai($data['gimimo_metai']);
+            $klientas->setTelefonoNumeris($data['telefono_numeris']);
+            $klientas->setNaudotojoId($naudotojas);
 
             $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($naudotojas);
             $entityManager->persist($klientas);
             $entityManager->flush();
 
@@ -48,7 +82,7 @@ class KlientaiController extends AbstractController
             return $this->redirectToRoute('app_klientai');
         }
         return $this->render('klientai/forma.html.twig', [
-                'purpose' => 'Prideti',
+                'purpose' => 'Pridėti',
                 'object' => 'klientą',
                 'form' => $form->createView(),
                 ]);
@@ -83,21 +117,15 @@ class KlientaiController extends AbstractController
         }
 
         /**
-         * @Route("/klientai/profilis", name="app_klientaiProfilis")
+         * @Route("/klientai/profilis/{klientasID}", name="app_klientaiProfilis")
          */
-        public function profile()
+        public function profile($klientasID)
         {
-           $user = $this->get('security.token_storage')->getToken()->getUser();
-           $userId = $user->getId();
-            $klientai = $this->getDoctrine()
-                ->getRepository(Klientas::class)
-                ->findAll();
-
-                $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $userId]);
-
-
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            
+            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['id' => $klientasID]);
+            
             return $this->render('klientai/perziuretiprof.html.twig', [
-                'klientai' => $klientai,
                 'klientas' => $klientas,
             ]);
         }
@@ -112,7 +140,7 @@ class KlientaiController extends AbstractController
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->find($klientasID);
-            $form = $this->createForm(KlientaiFormType::class, $klientas);
+            $form = $this->createForm(KlientaiRedaguotiFormType::class, $klientas);
                     $form->handleRequest($request);
 
 
@@ -125,7 +153,7 @@ class KlientaiController extends AbstractController
                     $entityManager->flush();
 
                     $this->addFlash('success', 'Profilis paredaguotas');
-                    return $this->redirectToRoute('app_klientaiProfilis');
+                    return $this->redirectToRoute('app_klientaiProfilis', ['klientasID' => $klientasID]);
                 }
 
                 return $this->render('klientai/forma.html.twig', [

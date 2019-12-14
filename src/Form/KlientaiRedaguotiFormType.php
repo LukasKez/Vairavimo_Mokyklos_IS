@@ -16,18 +16,11 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 
-class KlientaiFormType extends AbstractType
+class KlientaiRedaguotiFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('el_pastas', EmailType::class, [
-                'label' => 'El. paštas'
-            ])
-            ->add('slaptazodis', PasswordType::class, [
-                'label' => 'Slaptažodis'
-            ])
-
             ->add('asmens_kodas', NumberType::class, [
                 'invalid_message' => 'Asmens kodas turi būti iš skaičių',
             ])
@@ -49,7 +42,7 @@ class KlientaiFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            
+            'data_class' => Klientas::class,
         ]);
     }
 }

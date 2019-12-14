@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Filialas;
+use App\Entity\Instruktorius;
 use App\Entity\Marsrutas;
 use App\Entity\Miestas;
 use App\Form\FilialaiFormType;
@@ -150,14 +151,14 @@ class FilialaiController extends AbstractController
     }
 
     /**
-     * @Route("/filialai/instruktoriai/{filialasID}", name="app_filialoInstruktoriai")
+     * @Route("/filialai/{filialasID}/instruktoriai", name="app_filialoInstruktoriai")
      */
     public function employees($filialasID)
     {
-
+        $instruktoriai = $this->getDoctrine()->getRepository(Instruktorius::class)->findBy(['filialas'=>$filialasID]);
 
         return $this->render('filialai/filialo-instruktoriai.html.twig', [
-
+            'instruktoriai' => $instruktoriai,
         ]);
     }
 

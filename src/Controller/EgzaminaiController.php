@@ -71,9 +71,9 @@ class EgzaminaiController extends AbstractController
             $instruktoriausTvarkarastis = null;
 
             $klientoTvarkarasciai= $this->getDoctrine()
-                ->getRepository(KlientoTvarkarastis::class)->findAll();//findOneBy(['pabaiga' => null]);
+                ->getRepository(KlientoTvarkarastis::class)->findAll();
             $instruktoriausTvarkarasiai = $this->getDoctrine()
-                ->getRepository(InstruktoriausTvarkarastis::class)->findAll();//indOneBy(['pabaiga' => null]);
+                ->getRepository(InstruktoriausTvarkarastis::class)->findAll();
 
             foreach ($klientoTvarkarasciai as $tvarkarastis){
                 $id = $tvarkarastis->getKlientas()->getId();
@@ -92,7 +92,7 @@ class EgzaminaiController extends AbstractController
 
             $entityManager = $this->getDoctrine()->getManager();
             $date = new \DateTime();
-            $date->format('Y-m-d');
+            $date->format('Y-m-d H:i');
             if($klientoTvarkarastis == null){
                 $klientoTvarkarastis = new KlientoTvarkarastis();
                 $klientoTvarkarastis->setPradzia($date);
@@ -128,12 +128,16 @@ class EgzaminaiController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $egzaminas = $this->getDoctrine()->getRepository(Egzaminas::class)->find($slug);
-        $form = $this->createForm(EgzaminasFormType::class, $egzaminas);
+        $form = $this->createForm(EgzaminasFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $egzaminas = $form->getData();
+            $data = $form->getData();
+            $egzaminas->setEgzaminoTipas($data['EgzaminoTipas']);
+            $egzaminas->setData($data['data_ir_laikas']);
+            $egzaminas->setAdresas($data['adresas']);
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($egzaminas);
             $entityManager->flush();

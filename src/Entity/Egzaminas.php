@@ -21,14 +21,9 @@ class Egzaminas
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $data;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $laikas;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -57,18 +52,6 @@ class Egzaminas
     public function setData(\DateTimeInterface $data): self
     {
         $this->data = $data;
-
-        return $this;
-    }
-
-    public function getLaikas(): ?string
-    {
-        return $this->laikas;
-    }
-
-    public function setLaikas(string $laikas): self
-    {
-        $this->laikas = $laikas;
 
         return $this;
     }
@@ -151,7 +134,7 @@ class Egzaminas
     }
 
     public function getPavadinimas(){
-        return 'Adresas: '.$this->adresas.', Laikas: '.$this->data->format('Y-m-d').', '.$this->laikas;
+        return 'Adresas: '.$this->adresas.', Laikas: '.$this->data->format('Y-m-d H:m');
     }
 
 
