@@ -4,14 +4,6 @@
 {% block body %}
           <h4>Pridėti automobilį</h4>
     {{ form_start(form) }}
-    <div>
-      <label for="automobiliai_Automobilis" class="required">Automobilis</label>
-      <select id="automobiliai_Automobilis" name="automobiliai[Automobilis]" class="form-control">
-           {% for modelis in modeliai %}
-           <option value="{{modelis.id}}">{{ modelis.marke.pavadinimas }} {{modelis.modelis}}</option>
-           {% endfor %}
-      </select>
-    </div>
     {{ form_widget(form) }}
     <input type="submit" name="patvirtinti" class="btn btn-primary" value="Pridėti">
     {{ form_end(form) }}

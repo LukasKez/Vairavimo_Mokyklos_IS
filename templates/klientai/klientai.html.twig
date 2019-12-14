@@ -3,39 +3,87 @@
 {% block title %}Klientai{% endblock %}
 
 {% block body %}
-    <h1>Klientų sąrašas:</h1>
-    <a href="{{ path('app_klientaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti klientą</a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <h1>Klientų sąrašas:</h1>
+        <a href="{{ path('app_klientaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti klientą</a>
 
-    <table class="table">
-        <tr>
-            <th>Nr</th>
-            <th>Asmens kodas</th>
-            <th>Vardas</th>
-            <th>Pavardė</th>
-            <th>Gimimo metai</th>
-            <th>Telefono numeris</th>
-        </tr>
-        <tr>
-            {% for klientas in klientai %}
-        <tr>
-            <td>{{ klientas.id }}</td>
-            <td>{{ klientas.asmensKodas }}</td>
-            <td>{{ klientas.vardas }}</td>
-            <td>{{ klientas.pavarde }}</td>
-            <td>{{ klientas.gimimoMetai|date("Y-m-d", false) }}</td>
-            <td>{{ klientas.telefonoNumeris }}</td>
+        <table class="table">
+            <tr>
+                <th>Nr</th>
+                <th>Asmens kodas</th>
+                <th>Vardas</th>
+                <th>Pavardė</th>
+                <th>Funkcijos</th>
+            </tr>
+            <tr>
+                {% for klientas in klientai %}
+            <tr>
+                <td>{{ klientas.id }}</td>
+                <td>{{ klientas.asmensKodas }}</td>
+                <td>{{ klientas.vardas }}</td>
+                <td>{{ klientas.pavarde }}</td>
+                <td>
+                    <a href="{{ path('app_klientaiProfilis',{'klientasID':klientas.id}) }}" class="btn btn-success">Peržiūrėti profilį</a>
+                    <a href="{{ path('app_klientaiIstrinti', {'id':klientas.id}) }}" class="btn  btn-danger js-delete-btn">Ištrinti</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tr>
+        </table>
+    {% endif %}
 
-            <td>
+    {% if is_granted('ROLE_INSTRUKTORIUS') %}
+        <h1>Klientų sąrašas:</h1>
+        <table class="table">
+            <tr>
+                <th>Nr</th>
+                <th>Asmens kodas</th>
+                <th>Vardas</th>
+                <th>Pavardė</th>
+                <th>Funkcijos</th>
+            </tr>
+            <tr>
+                {% for klientas in klientai %}
+            <tr>
+                <td>{{ klientas.id }}</td>
+                <td>{{ klientas.asmensKodas }}</td>
+                <td>{{ klientas.vardas }}</td>
+                <td>{{ klientas.pavarde }}</td>
+                <td>
+                    <a href="{{ path('app_klientaiProfilis',{'klientasID':klientas.id}) }}" class="btn btn-success">Peržiūrėti profilį</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tr>
+        </table>
+    {% endif %}
 
+    {% if is_granted('ROLE_KLIENTAS') %}
+        <h1>Klientas:</h1>
 
-                <a href="{{ path('app_klientaiProfilis',{'klientasID':klientas.id}) }}" class="btn btn-success">Peržiūrėti profilį</a>
-
-                <a href="{{ path('app_klientaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
-                <a href="{{ path('app_klientaiIstrinti', {'id':klientas.id}) }}" class="btn  btn-danger js-delete-btn">Ištrinti</a>
-            </td>
-        </tr>
-        {% endfor %}
-        </tr>
-    </table>
+        <table class="table">
+            <tr>
+                <th>Nr</th>
+                <th>Asmens kodas</th>
+                <th>Vardas</th>
+                <th>Pavardė</th>
+                <th>Funkcijos</th>
+            </tr>
+            <tr>
+                {% for klientas in klientai %}
+            <tr>
+                <td>{{ klientas.id }}</td>
+                <td>{{ klientas.asmensKodas }}</td>
+                <td>{{ klientas.vardas }}</td>
+                <td>{{ klientas.pavarde }}</td>
+                <td>
+                    <a href="{{ path('app_klientaiProfilis',{'klientasID':klientas.id}) }}" class="btn btn-success">Peržiūrėti profilį</a>
+                    <a href="{{ path('app_klientaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tr>
+        </table>
+    {% endif %}
 
 {% endblock %}

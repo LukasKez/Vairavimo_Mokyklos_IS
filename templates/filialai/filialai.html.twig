@@ -6,7 +6,9 @@
     <h1>Filialų sąrašas:</h1>
     <div class="float-right">
         <a href="{{ path('app_miestai') }}" class="btn btn-primary mx-3 my-1">Miestų sąrašas</a>
-        <a href="{{ path('app_filialaiPrideti') }}" class="btn btn-primary my-1">Pridėti filialą</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_filialaiPrideti') }}" class="btn btn-primary my-1">Pridėti filialą</a>
+        {% endif %}
     </div>
     <table class="table table-hover">
         <tr>
@@ -23,10 +25,17 @@
                 <td>{{ filialas.miestas.pavadinimas }}</td>
                 <td>{{ filialas.telefonoNumeris }}</td>
                 <td>
-                    <a href="{{ path('app_filialaiMarsrutai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Maršrutai</a>
-                    <a href="{{ path('app_filialoInstruktoriai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Darbuotojai</a>
-                    <a href="{{ path('app_filialaiRedaguoti', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
-                    <a href="{{ path('app_filialaiIstrinti', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-danger js-delete-btn">Ištrinti</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_filialaiMarsrutai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Maršrutai</a>
+                        <a href="{{ path('app_filialoInstruktoriai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Darbuotojai</a>
+                        <a href="{{ path('app_filialaiRedaguoti', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
+                        <a href="{{ path('app_filialaiIstrinti', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-danger js-delete-btn">Ištrinti</a>
+                    {% elseif is_granted('ROLE_INSTRUKTORIUS') or is_granted('ROLE_KLIENTAS') %}
+                        <a href="{{ path('app_filialaiMarsrutai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Maršrutai</a>
+                        <a href="{{ path('app_filialoInstruktoriai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Darbuotojai</a>
+                    {% else %}
+                        <a href="{{ path('app_filialoInstruktoriai', {'filialasID':filialas.id}) }}" class="btn btn-sm btn-success">Darbuotojai</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

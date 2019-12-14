@@ -20,10 +20,21 @@ class KlientaiController extends AbstractController
      */
     public function index()
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $naudotojas = $this->getUser();
 
-        $klientai = $this->getDoctrine()
+        if($naudotojas->getRoles()[0] == 'ROLE_INSTRUKTORIUS' || 
+            $naudotojas->getRoles()[0] == 'ROLE_ADMIN'){
+            
+            $klientai = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->findAll();
+        }
+        else if ($naudotojas->getRoles()[0] == 'ROLE_KLIENTAS'){
+            $klientai = $this->getDoctrine()
+            ->getRepository(Klientas::class)
+            ->findBy(['naudotojo_id' => $naudotojas]);
+        }
         return $this->render('klientai/klientai.html.twig', [
             'klientai' => $klientai,
         ]);
@@ -34,6 +45,7 @@ class KlientaiController extends AbstractController
     */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(KlientaiFormType::class);
         $form->handleRequest($request);
 
@@ -90,6 +102,7 @@ class KlientaiController extends AbstractController
          */
         public function delete($id)
         {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
             $klientai = $this->getDoctrine()
                 ->getRepository(Klientas::class)
                 ->findAll();
@@ -132,6 +145,7 @@ class KlientaiController extends AbstractController
          */
     public function edit($klientasID, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->find($klientasID);

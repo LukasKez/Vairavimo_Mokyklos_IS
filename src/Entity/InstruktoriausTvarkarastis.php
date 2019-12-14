@@ -75,4 +75,22 @@ class InstruktoriausTvarkarastis
         return $this;
     }
 
+      /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Pravaziavimas", mappedBy="instruktoriaus_tvarkarastis")
+     */
+    private $pravaziavimai;
+
+    public function __construct()
+    {
+        $this->pravaziavimai = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Pravaziavimas[]
+     */
+    public function getPravaziavimai(): Collection
+    {
+        return $this->pravaziavimai;
+    }
+
 }

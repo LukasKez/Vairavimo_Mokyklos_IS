@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-
-
-
 class AutomobiliaiController extends AbstractController
 {
     /**
@@ -30,7 +27,8 @@ class AutomobiliaiController extends AbstractController
      */
     public function index()
     {
-		    $transportoPriemones = $this->getDoctrine()->getRepository(TransportoPriemone::class)->AutomobilisInfo();
+      $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+		    $transportoPriemones = $this->getDoctrine()->getRepository(TransportoPriemone::class)->findAll();
 
         return $this->render('automobiliai/automobiliai.html.twig',
         array(
@@ -44,23 +42,22 @@ class AutomobiliaiController extends AbstractController
      */
     public function add(Request $request)
     {
+      $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $modeliai = $this->getDoctrine()->getRepository(Modelis::class)->findAll();
 
           $form = $this->createForm(AutomobiliaiType::class);
           $request = Request::createFromGlobals();
           $rez = $request->get('automobiliai');
-          var_dump($rez);
 
             if (!empty($request->get('patvirtinti')))
             {
+              var_dump($rez);
               $entityManager = $this->getDoctrine()->getManager();
               $pagaminimo_metai = (int)$rez['pagaminimo_metai'];
               $busena = (int)$rez['busena'];
-              $automobilio_modelis = (int)$rez['Automobilis'];
+              $automobilio_modelis = (int)$rez['modelis'];
               $pavaru_deze = (int)$rez['pavaru_deze'];
-
               $er = '';
-
 
               if($automobilio_modelis==0 || empty($rez['valstybiniai_nr']) ||
                $pagaminimo_metai == 0 || $busena == 0 || $pavaru_deze == 0 ||
@@ -69,14 +66,20 @@ class AutomobiliaiController extends AbstractController
                   $klaida = "Neteisingai užpildyti laukeliai";
                }
 
+               $automobilio_modelis = $this->getDoctrine()->getRepository(Modelis::class)->findOneBy(['id' => $automobilio_modelis]);
+               $busena = $this->getDoctrine()->getRepository(TransportoPriemonesBusena::class)->findOneBy(['id' => $busena]);
+               $pavaru_deze = $this->getDoctrine()->getRepository(PavaruDeze::class)->findOneBy(['id' => $pavaru_deze]);
+               $filialas = $this->getDoctrine()->getRepository(Filialas::class)->findOneBy(['id' => (int)$rez['filialas']]);
+               
                if($er == '')
                {
                   $automobilis = new TransportoPriemone();
-                  $automobilis->setModelis($rez['Automobilis']);
+                  $automobilis->setModelis($automobilio_modelis);
                   $automobilis->setValstybiniaiNr($rez['valstybiniai_nr']);
                   $automobilis->setPagaminimoMetai($pagaminimo_metai);
-                  $automobilis->setBusena($busena);
+                  $automobilis->setTransportoPriemonesBusena($busena);
                   $automobilis->setPavaruDeze($pavaru_deze);
+                  $automobilis->setFilialas($filialas);
 
                   $automobilis->setIlguma(floatval($rez['ilguma']));
                   $automobilis->setPlokstuma(floatval($rez['plokstuma']));
@@ -109,6 +112,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function condition($id, Request $request)
     {
+        $this->denyAccessUnlessGranted(['ROLE_INSTRUKTORIUS', 'ROLE_ADMIN']);
         $form = $this->createForm(AutomobilioBusenosType::class);
         $form->handleRequest($request);
 
@@ -125,8 +129,8 @@ class AutomobiliaiController extends AbstractController
               }
               else
               {
-
-              $automobilis->setBusena($busena);
+              $automobilis->setTransportoPriemonesBusena($busena1);
+              $entityManager->persist($automobilis);
               $entityManager->flush();
               $this->addFlash('success', 'Automobilio būsena pakeista');
                return $this->redirectToRoute('app_automobiliai');
@@ -146,6 +150,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function changeBranch($id, Request $request)
     {
+      $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(KeistiFilialaFormType::class);
         $entityManager = $this->getDoctrine()->getManager();
         $filialoID = (int)$request->get("keisti_filiala_form")['pavadinimas'];
@@ -180,6 +185,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function auto_position($id)
     {
+      $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $automobilis = $this->getDoctrine()->getRepository(TransportoPriemone::class)->find($id);
         return $this->render('automobiliai/vieta.html.twig', [
         'purpose' => 'Automobilio vieta',
@@ -192,6 +198,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function delete($id)
     {
+      $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $a = $this->getDoctrine()->getRepository(TransportoPriemone::class)->find($id);
         if ($a != null)
         {

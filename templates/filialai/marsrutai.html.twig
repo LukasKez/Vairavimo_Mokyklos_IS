@@ -7,10 +7,12 @@
         <div class="col">
             <h1>Maršrutai</h1>
         </div>
-        <div class="col">
-            <a href="{{ path('app_marsrutaiPrideti', {'filialasID':filialas.id}) }}"
-               class="btn btn-primary my-1 float-right">Pridėti maršrutą</a>
-        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="col">
+                <a href="{{ path('app_marsrutaiPrideti', {'filialasID':filialas.id}) }}"
+                class="btn btn-primary my-1 float-right">Pridėti maršrutą</a>
+            </div>
+        {% endif %}
     </div>
 
     {% for marsrutas in marsrutai %}

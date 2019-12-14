@@ -33,6 +33,8 @@ class FilialaiController extends AbstractController
      */
     public function add(Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $form = $this->createForm(FilialaiFormType::class);
         $form->handleRequest($request);
 
@@ -60,6 +62,8 @@ class FilialaiController extends AbstractController
      */
     public function edit($filialasID, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $filialas = $this->getDoctrine()->getRepository(Filialas::class)->find($filialasID);
         $form = $this->createForm(FilialaiFormType::class, $filialas);
         $form->handleRequest($request);
@@ -88,6 +92,8 @@ class FilialaiController extends AbstractController
      */
     public function delete($filialasID)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $filialas = $this->getDoctrine()->getRepository(Filialas::class)->find($filialasID);
 
         if ($filialas != null)
@@ -110,6 +116,7 @@ class FilialaiController extends AbstractController
      */
     public function routes($filialasID)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $filialas = $this->getDoctrine()->getRepository(Filialas::class)->find($filialasID);
         $marsrutai = $filialas->getMarsrutas();
 
@@ -124,6 +131,8 @@ class FilialaiController extends AbstractController
      */
     public function routesAdd(Request $request, $filialasID)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $form = $this->createForm(MarsrutasFormType::class);
         $form->handleRequest($request);
 
@@ -179,6 +188,7 @@ class FilialaiController extends AbstractController
      */
     public function townsAdd(Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(MiestasFormType::class);
         $form->handleRequest($request);
 
@@ -206,6 +216,7 @@ class FilialaiController extends AbstractController
      */
     public function townsEdit($miestasID, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $miestas = $this->getDoctrine()->getRepository(Miestas::class)->find($miestasID);
         $form = $this->createForm(MiestasFormType::class, $miestas);
         $form->handleRequest($request);
@@ -234,6 +245,7 @@ class FilialaiController extends AbstractController
      */
     public function townsDelete($miestasID)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $miestas = $this->getDoctrine()->getRepository(Miestas::class)->find($miestasID);
 
         if ($miestas != null)

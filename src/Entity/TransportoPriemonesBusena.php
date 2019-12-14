@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TransportoPriemonesBusenaRepository")
@@ -36,5 +38,23 @@ class TransportoPriemonesBusena
         $this->pavadinimas = $pavadinimas;
 
         return $this;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TransportoPriemone", mappedBy="busena")
+     */
+    private $transporto_priemones;
+
+    public function __construct()
+    {
+        $this->transporto_priemones = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|TransportoPriemone[]
+     */
+    public function getTransportoPriemones(): Collection
+    {
+        return $this->transporto_priemones;
     }
 }
