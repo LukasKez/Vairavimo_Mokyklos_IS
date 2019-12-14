@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ purpose }} {{ object }}{% endblock %}
+
+{% block body %}
+    <h1>{{ purpose }} {{ object }}</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" class="btn btn-success" value="Vykdyti">
+    {{ form_end(form) }}
+
+{% endblock %}

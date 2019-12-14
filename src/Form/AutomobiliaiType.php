@@ -21,14 +21,6 @@ class AutomobiliaiType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('Automobilis', EntityType::class, [
-            'class' => Modelis::class,
-            'choice_label' => function(Modelis $m) {
-                      return " ". $m->getModelis(); },
-            'attr' => [
-            'class' => 'form-control'
-            ]
-          ])
             ->add('valstybiniai_nr', TextType::class, [
               'label'=>"Valstybiniai numeriai",
               'attr' => [

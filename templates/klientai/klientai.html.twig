@@ -26,9 +26,12 @@
             <td>{{ klientas.telefonoNumeris }}</td>
 
             <td>
-                <a href="{{ path('app_klientaiIstrinti') }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
-                <a href="{{ path('app_klientaiProfilis') }}" class="btn btn-success">Peržiūrėti profilį</a>
+
+
+                <a href="{{ path('app_klientaiProfilis',{'klientasID':klientas.id}) }}" class="btn btn-success">Peržiūrėti profilį</a>
+
                 <a href="{{ path('app_klientaiTvarkarastis') }}" class="btn btn-success">Peržiūrėti tvarkaraštį</a>
+                <a href="{{ path('app_klientaiIstrinti', {'id':klientas.id}) }}" class="btn  btn-danger js-delete-btn">Ištrinti</a>
             </td>
         </tr>
         {% endfor %}

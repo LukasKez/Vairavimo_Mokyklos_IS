@@ -5,8 +5,9 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Klientas;
+use App\Entity\Naudotojas;
 use Doctrine\ORM\EntityManagerInterface;
-
+use App\Form\KlientaiFormType;
 use Symfony\Component\HttpFoundation\Request;
 
 class KlientaiController extends AbstractController
@@ -28,22 +29,55 @@ class KlientaiController extends AbstractController
     /**
     * @Route ("/klientai/prideti", name="app_klientaiPrideti")
     */
-    public function add()
+    public function add(Request $request)
     {
-        return $this->render('klientai/pridetikl.html.twig', [
-                'purpose' => 'Prideti'
+        $form = $this->createForm(KlientaiFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $klientas = $form->getData();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($klientas);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Klientas pridėtas');
+            return $this->redirectToRoute('app_klientai');
+        }
+        return $this->render('klientai/forma.html.twig', [
+                'purpose' => 'Prideti',
+                'object' => 'klientą',
+                'form' => $form->createView(),
                 ]);
     }
 
+
+
     /**
-         * @Route("/klientai/istrinti", name="app_klientaiIstrinti")
+         * @Route("/klientai/istrinti/{id}", name="app_klientaiIstrinti")
          */
-        public function delete()
+        public function delete($id)
         {
+            $klientai = $this->getDoctrine()
+                ->getRepository(Klientas::class)
+                ->findAll();
+            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->find($id);
+
+            if ($klientas != null)
+            {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($klientas);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Klientas ištrintas');
+                return $this->redirectToRoute('app_klientai');
+            }
 
             return $this->render('klientai/klientai.html.twig', [
-
+                'klientai' => $klientai,
             ]);
+
         }
 
         /**
@@ -51,49 +85,51 @@ class KlientaiController extends AbstractController
          */
         public function profile()
         {
-
+           $user = $this->get('security.token_storage')->getToken()->getUser();
+           $userId = $user->getId();
             $klientai = $this->getDoctrine()
                 ->getRepository(Klientas::class)
                 ->findAll();
+
+                $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $userId]);
+
+
             return $this->render('klientai/perziuretiprof.html.twig', [
                 'klientai' => $klientai,
+                'klientas' => $klientas,
             ]);
         }
 
 
-    /**
-     * @Route("/egzaminai/redaguoti/{slug}", name="app_redaguotiEgzamina")
-     */
-    public function update($slug)
-    {
-        $egzaminas = $this->getDoctrine()
-            ->getRepository(Egzaminas::class)
-            ->find($slug);
-        return $this->render('egzaminai/redaguoti_egzamina.html.twig', [
-            'egzaminas' => $egzaminas
-        ]);
-    }
+
         /**
-         * @Route("/klientai/redaguoti", name="app_klientaiRedaguoti")
+         * @Route("/klientai/redaguoti/{klientasID}", name="app_klientaiRedaguoti")
          */
-    public function edit(Request $request, $slug, EntityManagerInterface $entityManager)
+    public function edit($klientasID, Request $request)
     {
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
-            ->find($slug);
+            ->find($klientasID);
+            $form = $this->createForm(KlientaiFormType::class, $klientas);
+                    $form->handleRequest($request);
 
 
-        $klientas->setVardas($request->request->get('vardas'));
-        $klientas->setPavarde($request->request->get('pavarde'));
-        $klientas->setTelefonoNumeris($request->request->get('telefono_numeris'));
-        $klientas->setAsmensKodas($request->request->get('asmens_kodas'));
-        $date = new \DateTime($request->get('gimimo_metai'));
-        $klientas->GimimoMetai($date);
+        if ($form->isSubmitted() && $form->isValid())
+                {
+                    $klientas = $form->getData();
 
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($klientas);
+                    $entityManager->flush();
 
-        $entityManager->flush();
-                return $this->render('klientai/redaguotiprof.html.twig', [
-                'purpose' => 'Redaguoti',
+                    $this->addFlash('success', 'Profilis paredaguotas');
+                    return $this->redirectToRoute('app_klientaiProfilis');
+                }
+
+                return $this->render('klientai/forma.html.twig', [
+                    'purpose' => 'Redaguoti',
+                    'object' => 'klientą',
+                    'form' => $form->createView(),
                 ]);
             }
 

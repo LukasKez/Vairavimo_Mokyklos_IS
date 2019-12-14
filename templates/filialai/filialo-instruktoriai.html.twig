@@ -3,6 +3,25 @@
 {% block title %}Instruktoriai{% endblock %}
 
 {% block body %}
-    <h1>Instruktoriai</h1>
-
+<h1>Instruktoriai</h1>
+<table class="table table-hover">
+    <tr>
+        <th>Nr</th>
+        <th>Vardas</th>
+        <th>Pavardė</th>
+        <th>Tel. numeris</th>
+        <th>Vairavimo stažas</th>
+        <th></th>
+    </tr>
+    {% for instruktorius in instruktoriai %}
+        <tr>
+            <td>{{ instruktorius.id }}</td>
+            <td>{{ instruktorius.vardas }}</td>
+            <td>{{ instruktorius.pavarde }}</td>
+            <td>{{ instruktorius.telefono_numeris }}</td>
+            <td>{{ instruktorius.vairavimo_stazas_metais }}</td>
+            <td><a href="{{ path('app_instruktoriaiProfilis', {'insId':instruktorius.id}) }}" >Peržiūrėti profilį</a></td>
+        </tr>
+    {% endfor %}
+</table>
 {% endblock %}

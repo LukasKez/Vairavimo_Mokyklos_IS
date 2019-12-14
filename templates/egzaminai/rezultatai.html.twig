@@ -10,7 +10,7 @@
     <br/>
     <ul>
         <li>Egzamino tipas: {{ egzaminas.getEgzaminas.EgzaminoTipas.name }}</li>
-        <li>Data ir laikas: {{ egzaminas.getEgzaminas.data|date("Y-m-d", false) }} {{ egzaminas.getEgzaminas.laikas }} </li>
+        <li>Data ir laikas: {{ egzaminas.getEgzaminas.data|date("Y-m-d H:i", false) }} </li>
         <li>Adresas: {{ egzaminas.getEgzaminas.adresas }}</li>
         <li>Egzaminą laikė: {{ egzaminas.getKlientas.vardas }} {{ egzaminas.getKlientas.pavarde }}</li>
         <li>Egzaminą vertino: {{ egzaminas.getInstruktorius.vardas }} {{ egzaminas.getInstruktorius.pavarde }}</li>

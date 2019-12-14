@@ -5,4 +5,31 @@
 {% block body %}
     <h1>Instruktoriaus profilis</h1>
 
+<table class="table" style="width:30%">
+        <tr>
+            <th>Vardas</th>
+            <td>{{ instr.vardas }}</td>
+        </tr>
+        <tr>
+            <th>Pavardė</th>
+            <td>{{ instr.pavarde }}</td>
+        </tr>
+        <tr>
+            <th>Asmens Kodas</th>
+            <td>{{ instr.asmens_kodas }}</td>
+        </tr>
+        <tr>
+            <th>Gimimo data</th>
+            <td>{{ instr.gimimo_data|date("Y-m-d", false) }}</td>
+        </tr>
+        <tr>
+            <th>Vairavimo stažas metais</th>
+            <td>{{ instr.vairavimo_stazas_metais }}</td>
+        </tr>
+        <tr>
+            <th>Telefono numeris</th>
+            <td>{{ instr.telefono_numeris }}</td>
+        </tr>
+    </table>
+
 {% endblock %}

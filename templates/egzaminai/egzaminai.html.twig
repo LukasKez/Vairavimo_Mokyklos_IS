@@ -19,7 +19,7 @@
                     <tr>
                         <td>{{ egzaminas.getEgzaminas.id }}</td>
                         <td>{{ egzaminas.getEgzaminas.EgzaminoTipas.name }}</td>
-                        <td>{{ egzaminas.getEgzaminas.data|date("Y-m-d", false) }} {{ egzaminas.getEgzaminas.laikas }}</td>
+                        <td>{{ egzaminas.getEgzaminas.data|date("Y-m-d H:i", false) }}</td>
                         <td>{{ egzaminas.getEgzaminas.adresas }}</td>
                         <td>
                             <a href="{{ path('app_perziuretiRezultatus', {slug: egzaminas.id}) }}" class="btn btn-success">Peržiūrėti rezultatus</a>
@@ -43,7 +43,7 @@
             <tr>
                 <td>{{ egzaminas.getEgzaminas.id }}</td>
                 <td>{{ egzaminas.getEgzaminas.EgzaminoTipas.name }}</td>
-                <td>{{ egzaminas.getEgzaminas.data|date("Y-m-d", false) }} {{ egzaminas.getEgzaminas.laikas }}</td>
+                <td>{{ egzaminas.getEgzaminas.data|date("Y-m-d H:i", false) }}</td>
                 <td>{{ egzaminas.getEgzaminas.adresas }}</td>
                 <td>
                     <a href="{{ path('app_perziuretiRezultatus', {slug: egzaminas.id}) }}" class="btn btn-success">Peržiūrėti informaciją</a>
@@ -67,7 +67,7 @@
                 <tr>
                     <td>{{ egzaminas.id }}</td>
                     <td>{{ egzaminas.EgzaminoTipas.name }}</td>
-                    <td>{{ egzaminas.data|date("Y-m-d", false) }} {{ egzaminas.laikas }}</td>
+                    <td>{{ egzaminas.data|date("Y-m-d H:i", false) }}</td>
                     <td>{{ egzaminas.adresas }}</td>
                     <td>
                         <a href="{{ path('app_itrauktiEgzamina', {slug: egzaminas.id}) }}" class="btn btn-success">Įtraukti į tvarkaraštį</a>

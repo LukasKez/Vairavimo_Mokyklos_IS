@@ -21,7 +21,7 @@ class Instruktorius
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $asmens_kodas;
+    public $asmens_kodas;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -36,17 +36,17 @@ class Instruktorius
     /**
      * @ORM\Column(type="date")
      */
-    private $gimimo_data;
+    public $gimimo_data;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $vairavimo_stazas_metais;
+    public $vairavimo_stazas_metais;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $telefono_numeris;
+    public $telefono_numeris;
 
 
     public function getId(): ?int
@@ -129,7 +129,7 @@ class Instruktorius
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\InstruktoriausTvarkarastis", mappedBy="instruktorius")
      */
-    private $tvarkarasciai;
+    public $tvarkarasciai;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\LaikomasEgzaminas", mappedBy="instruktorius")

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20191207140520 extends AbstractMigration
+final class Version20191209121000 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,9 +22,8 @@ final class Version20191207140520 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE instruktoriaus_tvarkarascio_egzaminas (egzaminas_id INT NOT NULL, instruktoriaus_tvarkarastis_id INT NOT NULL, INDEX IDX_AD4D5DE83B5E41A1 (egzaminas_id), INDEX IDX_AD4D5DE8FAA9CE49 (instruktoriaus_tvarkarastis_id), PRIMARY KEY(egzaminas_id, instruktoriaus_tvarkarastis_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE instruktoriaus_tvarkarascio_egzaminas ADD CONSTRAINT FK_AD4D5DE83B5E41A1 FOREIGN KEY (egzaminas_id) REFERENCES egzaminas (id) ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE instruktoriaus_tvarkarascio_egzaminas ADD CONSTRAINT FK_AD4D5DE8FAA9CE49 FOREIGN KEY (instruktoriaus_tvarkarastis_id) REFERENCES instruktoriaus_tvarkarastis (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE egzaminas DROP laikas, CHANGE data data DATETIME NOT NULL');
+        $this->addSql('ALTER TABLE instruktoriaus_tvarkarastis CHANGE pradzia pradzia DATETIME NOT NULL, CHANGE pabaiga pabaiga DATETIME DEFAULT NULL');
         $this->addSql('ALTER TABLE naudotojas CHANGE roles roles TEXT NOT NULL');
     }
 
@@ -33,7 +32,8 @@ final class Version20191207140520 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE instruktoriaus_tvarkarascio_egzaminas');
+        $this->addSql('ALTER TABLE egzaminas ADD laikas VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci, CHANGE data data DATE NOT NULL');
+        $this->addSql('ALTER TABLE instruktoriaus_tvarkarastis CHANGE pradzia pradzia DATE NOT NULL, CHANGE pabaiga pabaiga DATE DEFAULT NULL');
         $this->addSql('ALTER TABLE naudotojas CHANGE roles roles TEXT NOT NULL COLLATE utf8mb4_unicode_ci');
     }
 }
