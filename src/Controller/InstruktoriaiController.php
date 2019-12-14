@@ -183,19 +183,30 @@ class InstruktoriaiController extends AbstractController
     public function tvarkarastis($insId)
     {
        $this->denyAccessUnlessGranted('ROLE_INSTRUKTORIUS');
-
+       
+       $tvarkarastis = $this->getDoctrine()->getRepository(InstruktoriausTvarkarastis::class)->find($insId);
        $entityManager = $this->getDoctrine()->getManager();
 
        $conn = $this->getDoctrine()->getManager()->getConnection();
 
-       $sql = "SELECT * FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId'";
+       $sql = "SELECT * FROM instruktoriaus_tvarkarastis 
+               JOIN pravaziavimas ON pravaziavimas.instruktoriaus_tvarkarastis = instruktoriaus_tvarkarastis.id
+                WHERE instruktorius = '$insId'";
+        $sql1 = "SELECT * FROM instruktoriaus_tvarkarastis 
+                JOIN instruktoriaus_tvarkarascio_egzaminas ON instruktoriaus_tvarkarastis_id = instruktoriaus_tvarkarastis.id
+                JOIN egzaminas ON instruktoriaus_tvarkarascio_egzaminas.egzaminas_id = egzaminas.id
+                JOIN egzaminu_tipai ON egzaminu_tipai.id = egzaminas.tipas
+                WHERE instruktorius = '$insId'";
        
        $stmt = $conn->prepare($sql);
+       $stmt1 = $conn->prepare($sql1);
        $stmt->execute();
-
-
+       $stmt1->execute();
+       
         return $this->render('instruktoriai/tvarkarastis.html.twig', [
-            'tvarks' => $stmt->fetchAll()
+            'pravaziavimai' => $stmt->fetchAll(),
+            'egzaminai' => $stmt1->fetchAll(),
+            'tvark' => $tvarkarastis
         ]);
     }
 
