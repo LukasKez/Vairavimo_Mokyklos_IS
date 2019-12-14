@@ -144,4 +144,5 @@ class Naudotojas implements UserInterface
     {
         return $this->instruktoriai;
     }
+
 }

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pridėti egzaminą{% endblock %}
+
+{% block body %}
+    <a style="margin-left: 15px; text-decoration: none" href="{{ path('app_egzaminai') }}">
+        <span>&#10229;</span> Grįžti atgal</a>
+    <h1>Redaguoti egzaminą</h1>
+    <br/>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <input type="submit" class="btn btn-success" value="Pridėti">
+                {{ form_end(form) }}
+            </div>
+        </div>
+{% endblock %}

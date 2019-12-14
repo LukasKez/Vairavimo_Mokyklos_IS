@@ -205,7 +205,7 @@ class InstruktoriaiController extends AbstractController
     public function tvarkarastisRedaguoti($tvarkId, Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_INSTRUKTORIUS');
-        $tvarkarastis = $this->getDoctrine()->getRepository(Instruktorius::class)->find($tvarkId);
+        $tvarkarastis = $this->getDoctrine()->getRepository(InstruktoriausTvarkarastis::class)->find($tvarkId);
 
         $form = $this->createForm(InstruktoriausTvarkarastisFormType::class, $tvarkarastis);
         $form->handleRequest($request);
