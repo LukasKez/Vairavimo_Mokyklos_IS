@@ -5,7 +5,9 @@
 {% block body %}
     <h1>Profilis</h1>
 
-    <table class="table">
+    <a href="{{ path('app_klientaiRedaguoti', {'klientasID':klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
+
+    <table class="table" style="margin-top: 20px">
 
         <tr>
             <th>Nr</th>
@@ -15,11 +17,8 @@
             <th>Gimimo metai</th>
             <th>Telefono numeris</th>
             <th>El. paštas</th>
-
-
         </tr>
         <tr>
-
         <tr>
             <td>{{ klientas.id }}</td>
             <td>{{ klientas.asmensKodas }}</td>
@@ -28,11 +27,8 @@
             <td>{{ klientas.gimimoMetai|date("Y-m-d", false) }}</td>
             <td>{{ klientas.telefonoNumeris }}</td>
             <td>{{ app.user.email }}</td>
-
-            <a href="{{ path('app_klientaiRedaguoti', {'klientasID':klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
             <td>
             </tr>
-
     </table>
 
 {% endblock %}

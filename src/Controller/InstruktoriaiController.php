@@ -9,8 +9,11 @@ use App\Entity\InstruktoriausTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\DriverManager;
 use App\Form\InstruktoriaiFormType;
+use App\Form\InstruktoriaiRedaguotiFormType;
 use App\Form\InstruktoriausTvarkarastisFormType;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Naudotojas;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class InstruktoriaiController extends AbstractController
 {
@@ -30,18 +33,49 @@ class InstruktoriaiController extends AbstractController
     /**
      * @Route("/instruktoriai/prideti", name="app_instruktoriaiPrideti")
      */
-    public function add(Request $request)
+    public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $form = $this->createForm(InstruktoriaiFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $instruktorius = $form->getData();
+            $data = $form->getData();
+            
+            $naudotojas = $this->getDoctrine()
+            ->getRepository(Naudotojas::class)
+            ->findOneBy(['email' => $data['el_pastas']]);
+            if($naudotojas != null){
+                return $this->render('instruktoriai/insforma.html.twig', [
+                    'purpose' => 'Pridėti',
+                    'object' => 'instruktorių',
+                    'form' => $form->createView(),
+                    'error' => 'Toks el. pašto adresas jau egzistuoja.'
+                ]);
+            }
+            $naudotojas = new Naudotojas();
+            $naudotojas->setEmail($data['el_pastas']);
+            $role[] = 'ROLE_INSTRUKTORIUS';
+            $naudotojas->setRoles($role);
+            $naudotojas->setPassword($passwordEncoder->encodePassword(
+                             $naudotojas,
+                             $data['slaptazodis']
+                         ));
+            $instruktorius = new Instruktorius();
+            $instruktorius->setAsmensKodas($data['asmens_kodas']);
+            $instruktorius->setVardas($data['vardas']);
+            $instruktorius->setPavarde($data['pavarde']);
+            $instruktorius->setGimimoData($data['gimimo_data']);
+            $instruktorius->setVairavimoStazasMetais($data['vairavimo_stazas_metais']);
+            $instruktorius->setTelefonoNumeris($data['telefono_numeris']);
+            $instruktorius->setFilialas($data['filialas']);
+            $instruktorius->setNaudotojoId($naudotojas);
 
-             $entityManager = $this->getDoctrine()->getManager();
-             $entityManager->persist($instruktorius);
-             $entityManager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($naudotojas);
+            $entityManager->persist($instruktorius);
+            $entityManager->flush();
+            
 
              $this->addFlash('success', 'Instruktorius pridėtas');
              return $this->redirectToRoute('app_instruktoriai');
@@ -60,7 +94,7 @@ class InstruktoriaiController extends AbstractController
     public function edit($insId, Request $request)
     {
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
-        $form = $this->createForm(InstruktoriaiFormType::class, $instruktorius);
+        $form = $this->createForm(InstruktoriaiRedaguotiFormType::class, $instruktorius);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
