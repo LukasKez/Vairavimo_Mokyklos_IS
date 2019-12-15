@@ -190,8 +190,7 @@ class InstruktoriaiController extends AbstractController
        $conn = $this->getDoctrine()->getManager()->getConnection();
 
        $sql = "SELECT * FROM instruktoriaus_tvarkarastis 
-               JOIN pravaziavimas ON pravaziavimas.instruktoriaus_tvarkarastis = instruktoriaus_tvarkarastis.id
-                WHERE instruktorius = '$insId'";
+                WHERE instruktorius in (SELECT id from instruktorius where instruktoriaus_tvarkarastis.instruktorius = '$insId')";
         $sql1 = "SELECT * FROM instruktoriaus_tvarkarastis 
                 JOIN instruktoriaus_tvarkarascio_egzaminas ON instruktoriaus_tvarkarastis_id = instruktoriaus_tvarkarastis.id
                 JOIN egzaminas ON instruktoriaus_tvarkarascio_egzaminas.egzaminas_id = egzaminas.id
@@ -256,16 +255,26 @@ class InstruktoriaiController extends AbstractController
             $conn = $this->getDoctrine()->getManager()->getConnection();
       
             $sql = "SELECT SUM(HOUR(TIMEDIFF(pradzia, pabaiga))) as laikas FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId' AND MONTH(pradzia) = MONTH('$menuo')";
-            
+            $sql1 = "SELECT COUNT(*) as kiekis FROM instruktoriaus_tvarkarascio_egzaminas 
+                    WHERE instruktoriaus_tvarkarastis_id in 
+                    (SELECT id FROM instruktoriaus_tvarkarastis WHERE instruktorius = 
+                    (SELECT id FROM instruktorius WHERE id = '$insId') AND MONTH(pradzia) = MONTH('$menuo'))";
+
             $stmt = $conn->prepare($sql);
             $stmt->execute();
 
+            $stmt1 = $conn->prepare($sql1);
+            $stmt1->execute();
+
             $row = $stmt->fetch();
-            $alga = $row['laikas'] * 15;
+            $row1 = $stmt1->fetch();
+
+            $alga = $row['laikas'] * 15 + $row1['kiekis'] * 20;
             return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
                 'menuo' => $month,
                 'laikas' => $row['laikas'],
-                'alga' => $alga
+                'alga' => $alga,
+                'egz' => $row1['kiekis']
             ]);
         }
       
@@ -273,7 +282,8 @@ class InstruktoriaiController extends AbstractController
         return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
                 'menuo' => "pasirinktą",
                 'laikas' => 0,
-                'alga' => 0
+                'alga' => 0,
+                'egz' => 0
         ]);
     }
 
