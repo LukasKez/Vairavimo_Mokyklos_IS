@@ -210,35 +210,6 @@ class InstruktoriaiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/instruktoriai/tvarkarastis/redaguoti/{tvarkId}", name="app_instruktoriaiRedaguotiTvarkarasti")
-     */
-    public function tvarkarastisRedaguoti($tvarkId, Request $request)
-    {
-        $this->denyAccessUnlessGranted('ROLE_INSTRUKTORIUS');
-        $tvarkarastis = $this->getDoctrine()->getRepository(InstruktoriausTvarkarastis::class)->find($tvarkId);
-
-        $form = $this->createForm(InstruktoriausTvarkarastisFormType::class, $tvarkarastis);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            $tvarkarastis = $form->getData();
-
-           $entityManager1 = $this->getDoctrine()->getManager();
-           $entityManager1->persist($tvarkarastis);
-           $entityManager1->flush();
-
-            $this->addFlash('success', 'Tvarkaraštis paredaguotas');
-            return $this->redirectToRoute('app_instruktoriai');
-        }
-
-        return $this->render('instruktoriai/tvarkarastis-redaguoti.html.twig', [
-            'purpose' => 'Redaguoti',
-            'object' => 'tvarkaraštį',
-            'form' => $form->createView(),
-        ]);
-    }
 
     /**
      * @Route("/instruktoriai/{insId}/alga", name="app_instruktoriaiAlga")
