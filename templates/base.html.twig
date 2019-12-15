@@ -28,10 +28,7 @@
                     <a class="nav-item nav-link" href="{{ path('app_logout') }}">Atsijungti</a>
 
                 {% elseif is_granted("ROLE_KLIENTAS") %}
-
-                    <a class="nav-item nav-link" href="{{ path('app_klientaiProfilis',{'klientasID':app.user.id} ) }}">Peržiūrėti profilį</a>
-                    <a class="nav-item nav-link" href="{{ path('app_klientaiTvarkarastis') }}">Peržiūrėti tvarkaraštį</a>
-                    <a class="nav-item nav-link" href="{{ path('app_klientai') }}">Klientai</a>
+                    <a class="nav-item nav-link" href="{{ path('app_klientai') }}">Kliento informacija</a>
                     <a class="nav-item nav-link" href="{{ path('app_instruktoriai') }}">Instruktoriai</a>
                     <a class="nav-item nav-link" href="{{ path('app_filialai') }}">Filialai</a>
                     <a class="nav-item nav-link" href="{{ path('app_automobiliai') }}">Automobiliai</a>
@@ -40,8 +37,8 @@
 
                     <a class="nav-item nav-link" href="{{ path('app_logout') }}">Atsijungti</a>
                 {% elseif is_granted("ROLE_INSTRUKTORIUS") %}
+                    <a class="nav-item nav-link" href="{{ path('app_instruktoriai') }}">Instruktoriaus informacija</a>
                     <a class="nav-item nav-link" href="{{ path('app_klientai') }}">Klientai</a>
-                    <a class="nav-item nav-link" href="{{ path('app_instruktoriai') }}">Instruktoriai</a>
                     <a class="nav-item nav-link" href="{{ path('app_filialai') }}">Filialai</a>
                     <a class="nav-item nav-link" href="{{ path('app_automobiliai') }}">Automobiliai</a>
                     <a class="nav-item nav-link" href="{{ path('app_egzaminai') }}">Egzaminai</a>
