@@ -108,7 +108,7 @@ class InstruktoriaiController extends AbstractController
      */
     public function edit($insId, Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_INSTRUKTORIUS');
 
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
         $form = $this->createForm(InstruktoriaiRedaguotiFormType::class, $instruktorius);

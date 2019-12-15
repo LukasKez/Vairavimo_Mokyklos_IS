@@ -137,7 +137,7 @@ class KlientaiController extends AbstractController
         {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
             
-            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $klientasID]);
+            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['id' => $klientasID]);
             
             return $this->render('klientai/perziuretiprof.html.twig', [
                 'klientas' => $klientas,
@@ -151,7 +151,7 @@ class KlientaiController extends AbstractController
          */
     public function edit($klientasID, Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_KLIENTAS');
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->find($klientasID);
@@ -239,13 +239,14 @@ class KlientaiController extends AbstractController
 
             ]);
         }
+
         /**
          * @Route("/klientai/priminti", name="app_klientaiPriminti")
          */
         public function priminti(Request $request, \Swift_Mailer $mailer)
         {
 
-$form = $this->createForm(PriminimoFormType::class);
+                $form = $this->createForm(PriminimoFormType::class);
                 $form->handleRequest($request);
 
                  if ($form->isSubmitted() && $form->isValid())
@@ -270,11 +271,9 @@ $form = $this->createForm(PriminimoFormType::class);
                                     $this->addFlash('success', 'Laiškas sėkmingai išsiųstas');
                                     return $this->redirectToRoute('app_egzaminai');
                                 }
-           return $this->render('klientai/siusti_laiska.html.twig', [
-                               'form' => $form->createView()
+                                return $this->render('klientai/siusti_laiska.html.twig', [
+                                    'form' => $form->createView()
                            ]);
-
-
         }
 
         /**
