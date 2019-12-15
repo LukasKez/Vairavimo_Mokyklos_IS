@@ -8,12 +8,12 @@ use App\Entity\Klientas;
 use App\Entity\Naudotojas;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\KlientaiFormType;
-<<<<<<< HEAD
+
 use App\Form\LaiskoFormType;
 use App\Form\PriminimoFormType;
-=======
+
 use App\Form\KlientaiRedaguotiFormType;
->>>>>>> origin/master
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -123,7 +123,7 @@ class KlientaiController extends AbstractController
         {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
             
-            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['id' => $klientasID]);
+            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $klientasID]);
             
             return $this->render('klientai/perziuretiprof.html.twig', [
                 'klientas' => $klientas,
@@ -169,7 +169,9 @@ class KlientaiController extends AbstractController
         public function tvarkarastis()
         {
 
-
+            $klientai = $this->getDoctrine()
+                        ->getRepository(Klientas::class)
+                        ->findAll();
             return $this->render('klientai/perziuretitvark.html.twig', [
 
             ]);

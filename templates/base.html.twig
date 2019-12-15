@@ -26,8 +26,11 @@
                     <a class="nav-item nav-link" href="{{ path('app_egzaminai') }}">Egzaminai</a>
                     <a class="nav-item nav-link" href="{{ path('app_perziuretiTaisykles') }}">Taisyklės</a>
                     <a class="nav-item nav-link" href="{{ path('app_logout') }}">Atsijungti</a>
+
                 {% elseif is_granted("ROLE_KLIENTAS") %}
-                    <a class="nav-item nav-link" href="{{ path('app_klientaiProfilis') }}">Peržiūrėti profilį</a>
+    <a class="nav-item nav-link" href="{{ path('app_klientaiProfilis',{'klientasID':app.user.id} ) }}">Peržiūrėti profilį</a>
+
+
                     <a class="nav-item nav-link" href="{{ path('app_klientaiTvarkarastis') }}">Peržiūrėti tvarkaraštį</a>
                     <a class="nav-item nav-link" href="{{ path('app_klientaiEgzaminai') }}">Egzaminai</a>
                     <a class="nav-item nav-link" href="{{ path('app_logout') }}">Atsijungti</a>
