@@ -7,6 +7,7 @@ use App\Entity\Modelis;
 use App\Entity\Marke;
 use App\Entity\TransportoPriemonesBusena;
 use App\Entity\PavaruDeze;
+use App\Entity\Filialas;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,6 +22,14 @@ class AutomobiliaiType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('modelis', EntityType::class, [
+              'label'=>"Modelis",
+              'class' => Modelis::class,
+              'choice_label' => 'getModelisIrMarke',
+              'attr' => [
+                'class' => 'form-control'
+              ]
+            ])
             ->add('valstybiniai_nr', TextType::class, [
               'label'=>"Valstybiniai numeriai",
               'attr' => [
@@ -80,6 +89,14 @@ class AutomobiliaiType extends AbstractType
             ->add('kategorija', TextType::class, [
               'attr' => [
                 'placeholder' => 'Įveskite kategoriją',
+                'class' => 'form-control'
+              ]
+            ])
+            ->add('filialas', EntityType::class, [
+              'label'=>"Filialas",
+              'class' => Filialas::class,
+              'choice_label' => 'adresas',
+              'attr' => [
                 'class' => 'form-control'
               ]
             ])

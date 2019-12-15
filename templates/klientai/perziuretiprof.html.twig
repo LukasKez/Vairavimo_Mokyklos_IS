@@ -5,30 +5,39 @@
 {% block body %}
     <h1>Profilis</h1>
 
-    <a href="{{ path('app_klientaiRedaguoti', {'klientasID':klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
-
-    <table class="table" style="margin-top: 20px">
-
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_klientaiRedaguoti', {'klientasID':klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
+    {% endif %}
+    
+    <table class="table" style="width:30%">
         <tr>
             <th>Nr</th>
-            <th>Asmens kodas</th>
-            <th>Vardas</th>
-            <th>Pavardė</th>
-            <th>Gimimo metai</th>
-            <th>Telefono numeris</th>
-            <th>El. paštas</th>
+            <td>{{ klientas.id }}</td>
         </tr>
         <tr>
-        <tr>
-            <td>{{ klientas.id }}</td>
-            <td>{{ klientas.asmensKodas }}</td>
+            <th>Vardas</th>
             <td>{{ klientas.vardas }}</td>
+        </tr>
+        <tr>
+            <th>Pavardė</th>
             <td>{{ klientas.pavarde }}</td>
+        </tr>
+        <tr>
+            <th>Asmens Kodas</th>
+            <td>{{ klientas.asmensKodas }}</td>
+        </tr>
+        <tr>
+            <th>Gimimo data</th>
             <td>{{ klientas.gimimoMetai|date("Y-m-d", false) }}</td>
+        </tr>
+        <tr>
+            <th>Telefono numeris</th>
             <td>{{ klientas.telefonoNumeris }}</td>
-            <td>{{ app.user.email }}</td>
-            <td>
-            </tr>
+        </tr>
+        <tr>
+            <th>El. paštas</th>
+            <td>{{ klientas.getNaudotojoID.email }}</td>
+        </tr>
     </table>
 
 {% endblock %}

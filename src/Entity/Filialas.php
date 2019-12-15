@@ -49,11 +49,17 @@ class Filialas
      */
     private $instruktoriai;
 
+    
+     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TransportoPriemone", mappedBy="busena")
+     */
+    private $transporto_priemones;
 
     public function __construct()
     {
         $this->marsrutas = new ArrayCollection();
         $this->instruktoriai = new ArrayCollection();
+        $this->transporto_priemones = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -147,5 +153,13 @@ class Filialas
     public function getInstruktoriai(): Collection
     {
         return $this->instruktoriai;
+    }
+
+    /**
+     * @return Collection|TransportoPriemone[]
+     */
+    public function getTransportoPriemones(): Collection
+    {
+        return $this->transporto_priemones;
     }
 }

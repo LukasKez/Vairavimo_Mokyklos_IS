@@ -121,6 +121,37 @@ class EgzaminaiController extends AbstractController
     }
 
     /**
+     * @Route("/egzaminai/prideti", name="app_pridetiEgzamina")
+     */
+    public function create(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $form = $this->createForm(EgzaminasFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $data = $form->getData();
+            $egzaminas = new Egzaminas();
+            $egzaminas->setEgzaminoTipas($data['EgzaminoTipas']);
+            $egzaminas->setData($data['data_ir_laikas']);
+            $egzaminas->setAdresas($data['adresas']);
+            
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($egzaminas);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Egzaminas sėkmingai pridėtas.');
+            return $this->redirectToRoute('app_egzaminai');
+        }
+        return $this->render('egzaminai/prideti_egzamina.html.twig', [
+            'form' => $form->createView()
+        ]);
+
+    }
+
+    /**
      * @Route("/egzaminai/redaguoti/{slug}", name="app_redaguotiEgzamina")
      */
     public function update(Request $request, $slug)

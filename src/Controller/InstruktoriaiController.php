@@ -22,9 +22,22 @@ class InstruktoriaiController extends AbstractController
      */
     public function index()
     {
-        $instruktoriai = $this->getDoctrine()
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $naudotojas = $this->getUser();
+
+        if($naudotojas->getRoles()[0] == 'ROLE_KLIENTAS' || 
+            $naudotojas->getRoles()[0] == 'ROLE_ADMIN'){
+            
+            $instruktoriai = $this->getDoctrine()
             ->getRepository(Instruktorius::class)
             ->findAll();
+        }
+        else if ($naudotojas->getRoles()[0] == 'ROLE_INSTRUKTORIUS'){
+            $instruktoriai = $this->getDoctrine()
+            ->getRepository(Instruktorius::class)
+            ->findBy(['naudotojo_id' => $naudotojas]);
+        }
         return $this->render('instruktoriai/instruktoriai.html.twig', [
             'instruktoriai' => $instruktoriai,
         ]);
@@ -35,6 +48,8 @@ class InstruktoriaiController extends AbstractController
      */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $form = $this->createForm(InstruktoriaiFormType::class);
         $form->handleRequest($request);
 
@@ -93,6 +108,8 @@ class InstruktoriaiController extends AbstractController
      */
     public function edit($insId, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
         $form = $this->createForm(InstruktoriaiRedaguotiFormType::class, $instruktorius);
         $form->handleRequest($request);
@@ -121,7 +138,7 @@ class InstruktoriaiController extends AbstractController
      */
     public function delete($insId)
     {
-
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
 
         if ($instruktorius != null)
@@ -144,6 +161,8 @@ class InstruktoriaiController extends AbstractController
      */
     public function profile($insId)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -163,19 +182,31 @@ class InstruktoriaiController extends AbstractController
      */
     public function tvarkarastis($insId)
     {
-        
+       $this->denyAccessUnlessGranted('ROLE_INSTRUKTORIUS');
+       
+       $tvarkarastis = $this->getDoctrine()->getRepository(InstruktoriausTvarkarastis::class)->find($insId);
        $entityManager = $this->getDoctrine()->getManager();
 
        $conn = $this->getDoctrine()->getManager()->getConnection();
 
-       $sql = "SELECT * FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId'";
+       $sql = "SELECT * FROM instruktoriaus_tvarkarastis 
+               JOIN pravaziavimas ON pravaziavimas.instruktoriaus_tvarkarastis = instruktoriaus_tvarkarastis.id
+                WHERE instruktorius = '$insId'";
+        $sql1 = "SELECT * FROM instruktoriaus_tvarkarastis 
+                JOIN instruktoriaus_tvarkarascio_egzaminas ON instruktoriaus_tvarkarastis_id = instruktoriaus_tvarkarastis.id
+                JOIN egzaminas ON instruktoriaus_tvarkarascio_egzaminas.egzaminas_id = egzaminas.id
+                JOIN egzaminu_tipai ON egzaminu_tipai.id = egzaminas.tipas
+                WHERE instruktorius = '$insId'";
        
        $stmt = $conn->prepare($sql);
+       $stmt1 = $conn->prepare($sql1);
        $stmt->execute();
-
-
+       $stmt1->execute();
+       
         return $this->render('instruktoriai/tvarkarastis.html.twig', [
-            'tvarks' => $stmt->fetchAll()
+            'pravaziavimai' => $stmt->fetchAll(),
+            'egzaminai' => $stmt1->fetchAll(),
+            'tvark' => $tvarkarastis
         ]);
     }
 
@@ -184,7 +215,8 @@ class InstruktoriaiController extends AbstractController
      */
     public function tvarkarastisRedaguoti($tvarkId, Request $request)
     {
-        $tvarkarastis = $this->getDoctrine()->getRepository(Instruktorius::class)->find($tvarkId);
+        $this->denyAccessUnlessGranted('ROLE_INSTRUKTORIUS');
+        $tvarkarastis = $this->getDoctrine()->getRepository(InstruktoriausTvarkarastis::class)->find($tvarkId);
 
         $form = $this->createForm(InstruktoriausTvarkarastisFormType::class, $tvarkarastis);
         $form->handleRequest($request);
@@ -213,6 +245,7 @@ class InstruktoriaiController extends AbstractController
      */
     public function skaiciuotiAlga($insId)
     {
+        $this->denyAccessUnlessGranted('ROLE_INSTRUKTORIUS');
         if (empty($_GET)) {
             // no data passed by get
         } else {

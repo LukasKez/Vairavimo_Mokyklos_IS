@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Klientas;
 use App\Entity\Naudotojas;
+use App\Entity\KlientoTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\KlientaiFormType;
 
@@ -25,10 +26,21 @@ class KlientaiController extends AbstractController
      */
     public function index()
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $naudotojas = $this->getUser();
 
-        $klientai = $this->getDoctrine()
+        if($naudotojas->getRoles()[0] == 'ROLE_INSTRUKTORIUS' || 
+            $naudotojas->getRoles()[0] == 'ROLE_ADMIN'){
+            
+            $klientai = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->findAll();
+        }
+        else if ($naudotojas->getRoles()[0] == 'ROLE_KLIENTAS'){
+            $klientai = $this->getDoctrine()
+            ->getRepository(Klientas::class)
+            ->findBy(['naudotojo_id' => $naudotojas]);
+        }
         return $this->render('klientai/klientai.html.twig', [
             'klientai' => $klientai,
         ]);
@@ -39,6 +51,7 @@ class KlientaiController extends AbstractController
     */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(KlientaiFormType::class);
         $form->handleRequest($request);
 
@@ -95,6 +108,7 @@ class KlientaiController extends AbstractController
          */
         public function delete($id)
         {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
             $klientai = $this->getDoctrine()
                 ->getRepository(Klientas::class)
                 ->findAll();
@@ -137,6 +151,7 @@ class KlientaiController extends AbstractController
          */
     public function edit($klientasID, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->find($klientasID);
@@ -168,12 +183,36 @@ class KlientaiController extends AbstractController
          */
         public function tvarkarastis()
         {
+            $naudotojas = $this->getUser();
+            $naudotojas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $naudotojas]);
+            $naudotojas = $naudotojas->getId();
+            $entityManager = $this->getDoctrine()->getManager();
+
 
             $klientai = $this->getDoctrine()
                         ->getRepository(Klientas::class)
                         ->findAll();
-            return $this->render('klientai/perziuretitvark.html.twig', [
 
+            $conn = $this->getDoctrine()->getManager()->getConnection();
+
+            $sql = "SELECT * FROM kliento_tvarkarastis 
+                    JOIN pravaziavimas ON pravaziavimas.kliento_tvarkarastis = kliento_tvarkarastis.id
+                        WHERE klientas = '$naudotojas'";
+                $sql1 = "SELECT * FROM kliento_tvarkarastis 
+                        JOIN kliento_tvarkarascio_egzaminas ON kliento_tvarkarastis_id = kliento_tvarkarastis.id
+                        JOIN egzaminas ON kliento_tvarkarascio_egzaminas.egzaminas_id = egzaminas.id
+                        JOIN egzaminu_tipai ON egzaminu_tipai.id = egzaminas.tipas
+                        WHERE klientas = '$naudotojas'";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt1 = $conn->prepare($sql1);
+            $stmt->execute();
+            $stmt1->execute();
+       
+
+            return $this->render('klientai/perziuretitvark.html.twig', [
+                'pravaziavimai' => $stmt->fetchAll(),
+                'egzaminai' => $stmt1->fetchAll(),
             ]);
         }
 
@@ -238,6 +277,12 @@ $form = $this->createForm(PriminimoFormType::class);
 
         }
 
+        /**
+                 * @Route("/klientai/primintiegz/{klientasEmail}/{egzName}/{egzDate}", name="app_klientaiPrimintiegz")
+                 */
+                public function primintiegz($klientasEmail,$egzName,$egzDate,Request $request, \Swift_Mailer $mailer)
+                {
 
+}
 
 }

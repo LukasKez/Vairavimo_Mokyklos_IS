@@ -55,7 +55,8 @@
         </table>
     {% elseif is_granted('ROLE_ADMIN')%}
         <h1>Egzaminų sąrašas:</h1>
-        <a href="{{ path('app_siustiLaiska') }}" class="btn btn-primary my-1 float-right">Siųsti laišką</a>
+        <a href="{{ path('app_pridetiEgzamina') }}" class="btn btn-primary my-1 float-right">Pridėti egzaminą</a>
+        <a href="{{ path('app_siustiLaiska') }}" class="btn btn-primary my-1 float-right" style="margin-right: 10px">Siųsti laišką</a>
         <table class="table">
             <tr>
                 <th>Nr</th>
