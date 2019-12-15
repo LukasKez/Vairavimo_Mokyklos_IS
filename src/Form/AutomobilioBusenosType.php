@@ -17,7 +17,8 @@ class AutomobilioBusenosType extends AbstractType
             ->add('pavadinimas', EntityType::class, [
                 'class' => TransportoPriemonesBusena::class,
                 'mapped'=> false,
-                'label'=>"Būsena",
+                'label'=>"Pasirinkite būseną: ",
+                'invalid_message' => 'Klaida: pasirinkta būsena neegzistuoja',
                 'choice_label' => 'pavadinimas',
                 'attr' => [
                   'class' => 'form-control'
