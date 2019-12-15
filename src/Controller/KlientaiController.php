@@ -10,6 +10,7 @@ use App\Entity\KlientoTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\KlientaiFormType;
 use App\Entity\Egzaminas;
+use App\Entity\Pravaziavimas;
 use App\Form\LaiskoFormType;
 use App\Form\PriminimoFormType;
 
@@ -152,11 +153,23 @@ class KlientaiController extends AbstractController
     public function edit($klientasID, Request $request)
     {
         //$this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if(in_array('ROLE_ADMIN', $this->getUser()->getRoles()))
+        {
+
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->find($klientasID);
+            }
+            else if(in_array('ROLE_KLIENTAS', $this->getUser()->getRoles()))
+            {
+
+             $klientas = $this->getDoctrine()
+             ->getRepository(Klientas::class)
+             ->findOneBy(['naudotojo_id' => $klientasID]);
+             }
             $form = $this->createForm(KlientaiRedaguotiFormType::class, $klientas);
                     $form->handleRequest($request);
+
 
 
         if ($form->isSubmitted() && $form->isValid())
@@ -222,10 +235,28 @@ class KlientaiController extends AbstractController
         public function progresas()
         {
 
+        $this->denyAccessUnlessGranted('ROLE_KLIENTAS');
+         $naudotojas = $this->getUser();
+                    $naudotojas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $naudotojas]);
+                    $naudotojas = $naudotojas->getId();
 
-            return $this->render('klientai/progresas.html.twig', [
+            $conn = $this->getDoctrine()->getManager()->getConnection();
 
-            ]);
+                        $sql = "SELECT * FROM kliento_tvarkarastis
+                                JOIN pravaziavimas ON pravaziavimas.kliento_tvarkarastis = kliento_tvarkarastis.id
+                                    WHERE klientas = '$naudotojas'
+                                    ORDER BY `pravaziavimas`.`data` DESC
+                                    ";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+
+         return $this->render('klientai/progresas.html.twig', [
+            'pravaziavimai' => $stmt->fetchAll(),
+        ]);
+
+
+
         }
 
         /**

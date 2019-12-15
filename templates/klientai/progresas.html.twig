@@ -1,8 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Kliento progresas{% endblock %}
+{% block title %}Progresas{% endblock %}
 
 {% block body %}
-    <h1>Kliento progresas</h1>
+    <a style="margin-left: 15px; text-decoration: none" href="{{ path('app_klientaiTvarkarastis') }}">
+        <span>&#10229;</span> Grįžti atgal</a>
+    <h1>Progreso peržiūra</h1>
+    <br/>
+    <div style="margin-left: 10px">
 
+        <h5>Važiavimų balai:
+        </h5>
+
+            {% for pravaziavimas in pravaziavimai %}
+                {{pravaziavimas.data|date("Y-m-d H:i") }}
+                balas:
+                {{ pravaziavimas.ivertinimas }}
+                <div></div>
+            {% endfor %}
+
+
+
+
+
+
+        <br/>
+
+    </div>
 {% endblock %}
