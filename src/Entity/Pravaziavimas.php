@@ -22,7 +22,7 @@ class Pravaziavimas
     private $data;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $ivertinimas;
 
