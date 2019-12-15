@@ -80,9 +80,15 @@ class InstruktoriausTvarkarastis
      */
     private $pravaziavimai;
 
+        /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Algalapis", mappedBy="instruktorius")
+     */
+    private $algalapiai;
+
     public function __construct()
     {
         $this->pravaziavimai = new ArrayCollection();
+        $this->algalapiai = new ArrayCollection();
     }
 
     /**
@@ -93,4 +99,11 @@ class InstruktoriausTvarkarastis
         return $this->pravaziavimai;
     }
 
+    /**
+     * @return Collection|Algalapis[]
+     */
+    public function getAlgalapis(): Collection
+    {
+        return $this->algalapiai;
+    }
 }
