@@ -1,0 +1,8 @@
+<h3>Priminimas apie egzaminą!</h3>
+
+<h4>Laikomo egzamino duomenys:</h4>
+<ul>
+    <li>Tipas: {{ egzamina.EgzaminoTipas.name }}</li>
+    <li>Data ir laikas: {{ egzamina.getData|date('Y-m-d H:i') }}</li>
+    <li>Adresas: {{ egzamina.getAdresas }}</li>
+</ul>

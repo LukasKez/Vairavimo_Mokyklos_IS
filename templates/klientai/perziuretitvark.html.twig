@@ -14,16 +14,16 @@
         <tr>
             <th>Pravažiavimo pradzia</th>
             <th>Pravažiavimo pabaiga</th>
-            <th>Įvertinimas</th>
+
         </tr>
 
         <tr>
             {% for pravaziavimas in pravaziavimai %}
             <tr>
             
-            <td>{{ pravaziavimas.pradzia|date("Y-m-d G:i:s") }}</td>
-            <td style="text-align: left">{{ pravaziavimas.pabaiga|date("Y-m-d G:i:s") }}</td>
-            <td style="text-align: left">{{ pravaziavimas.ivertinimas }}</td>
+            <td>{{ pravaziavimas.pradzia|date("Y-m-d H:i") }}</td>
+            <td style="text-align: left">{{ pravaziavimas.pabaiga|date("Y-m-d H:i") }}</td>
+
             </tr>
             {% endfor %}
         </tr>
@@ -37,14 +37,18 @@
             <th>Tipas</th>
             <th>Data ir laikas</th>
             <th>Adresas</th>
+            <th></th>
         </tr>
 
         <tr>
+
             {% for egzaminas in egzaminai %}
             <tr>
             <td>{{ egzaminas.name }}</td>
             <td>{{ egzaminas.data|date("Y-m-d G:i:s") }}</td>
             <td style="text-align: left">{{ egzaminas.adresas }}</td>
+            <td> <a href="{{ path('app_klientaiPrimintiegz',{'egzID':egzaminas.id}) }}" class="btn btn-sm btn-primary">Siūsti priminimą</a></td>
+
             </tr>
             {% endfor %}
         </tr>

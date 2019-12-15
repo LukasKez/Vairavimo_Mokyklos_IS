@@ -48,6 +48,11 @@ class Instruktorius
      */
     public $telefono_numeris;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Algalapis", mappedBy="instruktorius")
+     */
+    private $algalapiai;
+
 
     public function getId(): ?int
     {
@@ -140,6 +145,7 @@ class Instruktorius
     {
         $this->egzaminai = new ArrayCollection();
         $this->tvarkarasciai = new ArrayCollection();
+        $this->algalapiai = new ArrayCollection();
     }
 
     /**
@@ -200,5 +206,13 @@ class Instruktorius
         return $this->egzaminai;
     }
 
+
+    /**
+     * @return Collection|Algalapis[]
+     */
+    public function getAlgalapiai(): Collection
+    {
+        return $this->algalapiai;
+    }
 
 }
