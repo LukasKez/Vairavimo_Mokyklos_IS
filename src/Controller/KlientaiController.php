@@ -137,9 +137,18 @@ class KlientaiController extends AbstractController
         public function profile($klientasID)
         {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-            
+
+            if(in_array('ROLE_ADMIN', $this->getUser()->getRoles()))
+                    {
+
+                    $klientas = $this->getDoctrine()
+                        ->getRepository(Klientas::class)
+                        ->find($klientasID);
+                        }
+            else if(in_array('ROLE_KLIENTAS', $this->getUser()->getRoles()))
+                        {
             $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $klientasID]);
-            
+            }
             return $this->render('klientai/perziuretiprof.html.twig', [
                 'klientas' => $klientas,
             ]);
