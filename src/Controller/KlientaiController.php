@@ -9,7 +9,7 @@ use App\Entity\Naudotojas;
 use App\Entity\KlientoTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\KlientaiFormType;
-
+use App\Entity\Egzaminas;
 use App\Form\LaiskoFormType;
 use App\Form\PriminimoFormType;
 
@@ -151,7 +151,7 @@ class KlientaiController extends AbstractController
          */
     public function edit($klientasID, Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        //$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->find($klientasID);
@@ -278,11 +278,30 @@ $form = $this->createForm(PriminimoFormType::class);
         }
 
         /**
-                 * @Route("/klientai/primintiegz/{klientasEmail}/{egzName}/{egzDate}", name="app_klientaiPrimintiegz")
+                 * @Route("/klientai/primintiegz/{egzID}", name="app_klientaiPrimintiegz")
                  */
-                public function primintiegz($klientasEmail,$egzName,$egzDate,Request $request, \Swift_Mailer $mailer)
+                public function primintiegz($egzID,Request $request, \Swift_Mailer $mailer)
                 {
 
+                 $egzamina = $this->getDoctrine()->getRepository(Egzaminas::class)->find($egzID);
+                 $email = $this->getUser()->getEmail();
+                $message = (new \Swift_Message('Priminimas apie egzaminą'))
+                                        ->setFrom('sentinelisko@gmail.com')
+                                        ->setTo($email)
+                                        ->setBody(
+                                        $this->renderView(
+                                    'klientai/laisko_forma.html.twig',
+                                    ['egzamina' => $egzamina]
+                                            ),
+                                            'text/html'
+                                        )
+                                    ;
+
+                                    //dd($message);
+                                    $mailer->send($message);
+
+                                    $this->addFlash('success', 'Laiškas sėkmingai išsiųstas');
+                                    return $this->redirectToRoute('app_klientaiTvarkarastis');
 }
 
 }
