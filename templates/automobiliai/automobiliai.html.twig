@@ -5,9 +5,7 @@
 {% block body %}
 
     <h1>Automobilių sąrašas:</h1>
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_automobiliaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti automobilį</a>
-    {% endif %}
+    <a href="{{ path('app_automobiliaiPrideti') }}" class="btn btn-primary my-1 float-right">Pridėti automobilį</a>
     <table class="table">
         <tr>
             <th>Kategorija</th>
@@ -22,28 +20,19 @@
         </tr>
 		{% for automobilis1 in transporto_priemones %}
             <tr>
-                <td>{{ automobilis1.getKategorija }}</td>
-                <td>{{ automobilis1.getModelis.getMarke.pavadinimas }} {{ automobilis1.getModelis.getModelis }}</td>
-                <td>{{ automobilis1.getValstybiniaiNr }}</td>
-                <td>{{ automobilis1.getPagaminimoMetai }}</td>
-                <td>{{ automobilis1.getTransportoPriemonesBusena.pavadinimas }}</td>
-                <td>{{ automobilis1.getPavaruDeze.pavadinimas    }}</td>
-                <td>{{ automobilis1.getKebulas }}</td>
-                <td>{{ automobilis1.getFilialas.adresas }}</td>
+                <td>{{ automobilis1.kategorija }}</td>
+                <td>{{ automobilis1.markes_pav }} {{ automobilis1.modelis }}</td>
+                <td>{{ automobilis1.valstybiniai_nr }}</td>
+                <td>{{ automobilis1.pagaminimo_metai }}</td>
+                <td>{{ automobilis1.busenos_pav }}</td>
+                <td>{{ automobilis1.deze    }}</td>
+                <td>{{ automobilis1.kebulas }}</td>
+                <td>{{ automobilis1.filialo_pav }}</td>
                 <td>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('app_automobiliaiVieta', {'id':automobilis1.id}) }}" class="btn btn-success btn-sm">Rodyti buvimo vietą</a>
-                        <a href="{{ path('app_automobiliaiFilialai', {'id':automobilis1.id}) }}" class="btn btn-primary btn-sm">Keisti filialą</a>
-                        <a href="{{ path('app_automobiliaiBusena', {'id':automobilis1.id}) }}" class="btn btn-warning btn-sm ">Keisti būseną</a>
-                        <a href="{{ path('app_automobiliaiIstrinti', {'id':automobilis1.id}) }}" class="btn btn-danger js-delete-btn btn-sm">Ištrinti automobilį</a>
-                    {% endif %}
-                    {% if is_granted('ROLE_INSTRUKTORIUS') %}
-                        <a href="{{ path('app_automobiliaiVieta', {'id':automobilis1.id}) }}" class="btn btn-success btn-sm">Rodyti buvimo vietą</a>
-                        <a href="{{ path('app_automobiliaiBusena', {'id':automobilis1.id}) }}" class="btn btn-warning btn-sm ">Keisti būseną</a>
-                    {% endif %}
-                    {% if is_granted('ROLE_KLIENTAS') %}
-                        <a href="{{ path('app_automobiliaiVieta', {'id':automobilis1.id}) }}" class="btn btn-success btn-sm">Rodyti buvimo vietą</a>
-                    {% endif %}
+					<a href="{{ path('app_automobiliaiVieta', {'id':automobilis1.id}) }}" class="btn btn-success btn-sm">Rodyti buvimo vietą</a>
+					<a href="{{ path('app_automobiliaiFilialai', {'id':automobilis1.id}) }}" class="btn btn-primary btn-sm">Keisti filialą</a>
+					<a href="{{ path('app_automobiliaiBusena', {'id':automobilis1.id}) }}" class="btn btn-warning btn-sm ">Keisti būseną</a>
+					<a href="{{ path('app_automobiliaiIstrinti', {'id':automobilis1.id}) }}" class="btn btn-danger js-delete-btn btn-sm">Ištrinti automobilį</a>
                 </td>
             </tr>
         {% endfor %}

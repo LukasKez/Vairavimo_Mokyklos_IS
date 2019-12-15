@@ -1,11 +1,125 @@
 {% extends 'base.html.twig' %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+{% endblock %}
 {% block title %}{{ purpose }} automobilį{% endblock %}
 {% block body %}
-          <h4>Pridėti automobilį</h4>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <input type="submit" name="patvirtinti" class="btn btn-primary" value="Pridėti">
-    {{ form_end(form) }}
+<h1>Pridėti automobilį</h1>
+<form  action="{{ path('app_automobiliaiPrideti') }}" name="pridejimas" method="post">
 
+
+ <div class="form-group row">
+ <label for="automobiliss" class="col-sm-2 col-form-label">*Automobilis: </label>
+ <div class="col-sm-10">
+   <select id="automobilis" class="form-control" name="automobilis">
+        <option>Pasirinkite...</option>
+        {% for modelis in modeliai %}
+          {% if modelis.id == postas.automobilis|default(null) %}
+           <option value="{{modelis.id}}" selected>{{ modelis.marke.pavadinimas }} {{modelis.modelis}}</option>
+          {% else %}
+            <option value="{{modelis.id}}">{{ modelis.marke.pavadinimas }} {{modelis.modelis}}</option>
+          {% endif %}
+        {% endfor %}
+   </select>
+ </div>
+ </div>
+ <div class="form-group row">
+ <label for="valst_nr" class="col-sm-2 col-form-label">*Valstybiniai numeriai: </label>
+ <div class="col-sm-10">
+   <input type="text" class="form-control" name="vnr" placeholder="Valstybiniai numeriai" value="{{postas.vnr|default(null)}}">
+ </div>
+ </div>
+ <div class="form-group row">
+ <label for="pagaminimo_metai" class="col-sm-2 col-form-label">*Pagaminimo metai: </label>
+ <div class="col-sm-10">
+   <input type="number" class="form-control" name="pagaminimo_metai" placeholder="Pagaminimo metai" value="{{postas.pagaminimo_metai|default(null)}}">
+ </div>
+ </div>
+
+ <div class="form-group row">
+ <label for="automobilio_busena" class="col-sm-2 col-form-label">*Automobilio busena: </label>
+ <div class="col-sm-10">
+   <select id="busena" class="form-control" name="busena">
+     <option>Pasirinkite...</option>
+     {% for busena in busenos %}
+       {% if busena.id == postas.busena|default(null) %}
+          <option value="{{busena.id}}" selected>{{ busena.pavadinimas }}</option>
+       {% else %}
+          <option value="{{busena.id}}">{{ busena.pavadinimas }}</option>
+       {% endif %}
+     {% endfor %}
+   </select>
+ </div>
+ </div>
+
+ <div class="form-group row">
+ <label for="pavaru_deze" class="col-sm-2 col-form-label">*Pavaru dėžė</label>
+ <div class="col-sm-10">
+   <select id="pavaruDeze" class="form-control" name="pavaruDeze">
+     <option selected>Pasirinkite...</option>
+     {% for pavaru_deze in pavaru_dezes %}
+         {% if pavaru_deze.id == postas.pavaruDeze|default(null) %}
+            <option value="{{pavaru_deze.id}}" selected>{{ pavaru_deze.pavadinimas }}</option>
+         {% else %}
+            <option value="{{pavaru_deze.id}}">{{ pavaru_deze.pavadinimas }}</option>
+         {% endif %}
+
+
+     {% endfor %}
+   </select>
+ </div>
+</div>
+
+ <div class="form-group row">
+ <label for="ilg" class="col-sm-2 col-form-label">Ilguma: </label>
+ <div class="col-sm-10">
+   <input type="text" class="form-control" name="ilguma" placeholder="Ilguma" value="{{postas.ilguma|default(null)}}">
+ </div>
+ </div>
+ <div class="form-group row">
+ <label for="platuma" class="col-sm-2 col-form-label">Platuma: </label>
+ <div class="col-sm-10">
+   <input type="text" class="form-control" name="platuma" placeholder="Platuma" value="{{postas.platuma|default(null)}}">
+ </div>
+ </div>
+
+ <div class="form-group row">
+ <label for="kat" class="col-sm-2 col-form-label">*Kategorija: </label>
+ <div class="col-sm-10">
+   <input type="text" class="form-control" id="kat" name="kategorija" placeholder="Kategorija" value="{{postas.kategorija|default(null)}}">
+ </div>
+ </div>
+
+ <div class="form-group row">
+ <label for="kat" class="col-sm-2 col-form-label">*Kėbulas: </label>
+ <div class="col-sm-10">
+   <input type="text" class="form-control" id="keb" name="kebulas" placeholder="Kėbulas" value="{{postas.kebulas|default(null)}}">
+ </div>
+ </div>
+ <div class="form-group row">
+ <label for="automobilio_filialas" class="col-sm-2 col-form-label">Filialas</label>
+ <div class="col-sm-10">
+   <select id="filialas" class="form-control" name="filialas">
+     <option value="-1" selected>Pasirinkite...</option>
+     {% for filialas in filialai %}
+         {% if filialas.id == postas.filialas|default(null) %}
+            <option value="{{filialas.id}}" selected>{{ filialas.pavadinimas }}</option>
+         {% else %}
+            <option value="{{filialas.id}}">{{ filialas.pavadinimas }}</option>
+         {% endif %}
+
+
+     {% endfor %}
+   </select>
+ </div>
+ </div>
+
+
+ <div class="form-group row">
+ <div class="col-sm-10">
+   <button type="submit" name="patvirtinti" value="1" class="btn btn-primary">Pridėti</button>
+ </div>
+ </div>
+</form>
 {% endblock %}
