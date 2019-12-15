@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ModelisRepository")
@@ -61,29 +59,6 @@ class Modelis
     public function getMarkeModelis(): ?string
     {
         return $this->fk_marke. " ".$this->pavadinimas;
-    }
-
-     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TransportoPriemone", mappedBy="modelis")
-     */
-    private $transporto_priemones;
-
-    public function __construct()
-    {
-        $this->transporto_priemones = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection|TransportoPriemone[]
-     */
-    public function getTransportoPriemones(): Collection
-    {
-        return $this->transporto_priemones;
-    }
-
-    public function getModelisIrMarke()
-    {
-        return $this->fk_marke->getPavadinimas()." ".$this->pavadinimas;
     }
 
 }

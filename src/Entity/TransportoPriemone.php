@@ -26,6 +26,17 @@ class TransportoPriemone
      */
     private $pagaminimo_metai;
 
+
+    /**
+     * @ORM\Column(type="integer", length=1)
+     */
+    private $busena;
+
+    /**
+     * @ORM\Column(type="integer", length=1)
+     */
+    private $pavaru_deze;
+
     /**
      * @ORM\Column(type="float",  nullable=true)
      */
@@ -46,6 +57,16 @@ class TransportoPriemone
      */
     private $kategorija;
 
+    /**
+     * @ORM\Column(type="integer", length=10)
+     */
+    private $fk_modelis;
+
+
+    /**
+     * @ORM\Column(type="integer", length=10, nullable=true)
+     */
+    private $fk_filialas;
 
     public function getId(): ?int
     {
@@ -72,6 +93,42 @@ class TransportoPriemone
     public function setPagaminimoMetai(int $metai): self
     {
         $this->pagaminimo_metai = $metai;
+
+        return $this;
+    }
+
+    public function getFilialas(): ?int
+    {
+        return $this->fk_filialas;
+    }
+
+    public function setFilialas(int $fid): self
+    {
+        $this->fk_filialas = $fid;
+
+        return $this;
+    }
+
+	public function getBusena(): ?int
+    {
+        return $this->busena;
+    }
+
+    public function setBusena(int $busena): self
+    {
+        $this->busena = $busena;
+
+        return $this;
+    }
+
+	public function getPavaruDeze(): ?int
+    {
+        return $this->pavaru_deze;
+    }
+
+    public function setPavaruDeze(int $deze): self
+    {
+        $this->pavaru_deze = $deze;
 
         return $this;
     }
@@ -121,76 +178,16 @@ class TransportoPriemone
         return $this;
     }
 
-      /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TransportoPriemonesBusena", inversedBy="transporto_priemones")
-     * @ORM\JoinColumn(name="busena", referencedColumnName="id")
-     */
-    private $busena;
-
-    public function getTransportoPriemonesBusena(): ?TransportoPriemonesBusena
+	public function getModelis(): ?int
     {
-        return $this->busena;
+        return $this->fk_modelis;
     }
 
-    public function setTransportoPriemonesBusena(?TransportoPriemonesBusena $busena): self
+    public function setModelis(int $modelis): self
     {
-        $this->busena = $busena;
-
+        $this->fk_modelis = $modelis;
         return $this;
     }
 
-      /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\PavaruDeze", inversedBy="transporto_priemones")
-     * @ORM\JoinColumn(name="pavaru_deze", referencedColumnName="id")
-     */
-    private $pavazu_deze;
-
-    public function getPavaruDeze(): ?PavaruDeze
-    {
-        return $this->pavazu_deze;
-    }
-
-    public function setPavaruDeze(?PavaruDeze $pavazu_deze): self
-    {
-        $this->pavazu_deze = $pavazu_deze;
-
-        return $this;
-    }
-
-       /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Modelis", inversedBy="transporto_priemones")
-     * @ORM\JoinColumn(name="modelis", referencedColumnName="id")
-     */
-    private $modelis;
-
-    public function getModelis(): ?Modelis
-    {
-        return $this->modelis;
-    }
-
-    public function setModelis(?Modelis $modelis): self
-    {
-        $this->modelis = $modelis;
-
-        return $this;
-    }
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Filialas", inversedBy="transporto_priemones")
-     * @ORM\JoinColumn(name="filialas", referencedColumnName="id")
-     */
-    private $filialas;
-
-    public function getFilialas(): ?Filialas
-    {
-        return $this->filialas;
-    }
-
-    public function setFilialas(?Filialas $filialas): self
-    {
-        $this->filialas = $filialas;
-
-        return $this;
-    }
 
 }
