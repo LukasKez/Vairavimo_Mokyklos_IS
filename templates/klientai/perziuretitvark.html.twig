@@ -40,11 +40,13 @@
         </tr>
 
         <tr>
+            <a href="{{ path('app_klientaiPriminti') }}" class="btn btn-sm btn-primary">Siūsti priminimą</a>
             {% for egzaminas in egzaminai %}
             <tr>
             <td>{{ egzaminas.name }}</td>
             <td>{{ egzaminas.data|date("Y-m-d G:i:s") }}</td>
             <td style="text-align: left">{{ egzaminas.adresas }}</td>
+
             </tr>
             {% endfor %}
         </tr>

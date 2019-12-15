@@ -9,7 +9,12 @@ use App\Entity\Naudotojas;
 use App\Entity\KlientoTvarkarastis;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\KlientaiFormType;
+
+use App\Form\LaiskoFormType;
+use App\Form\PriminimoFormType;
+
 use App\Form\KlientaiRedaguotiFormType;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -132,7 +137,7 @@ class KlientaiController extends AbstractController
         {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
             
-            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['id' => $klientasID]);
+            $klientas = $this->getDoctrine()->getRepository(Klientas::class)->findOneBy(['naudotojo_id' => $klientasID]);
             
             return $this->render('klientai/perziuretiprof.html.twig', [
                 'klientas' => $klientas,
@@ -183,6 +188,11 @@ class KlientaiController extends AbstractController
             $naudotojas = $naudotojas->getId();
             $entityManager = $this->getDoctrine()->getManager();
 
+
+            $klientai = $this->getDoctrine()
+                        ->getRepository(Klientas::class)
+                        ->findAll();
+
             $conn = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT * FROM kliento_tvarkarastis 
@@ -199,6 +209,7 @@ class KlientaiController extends AbstractController
             $stmt->execute();
             $stmt1->execute();
        
+
             return $this->render('klientai/perziuretitvark.html.twig', [
                 'pravaziavimai' => $stmt->fetchAll(),
                 'egzaminai' => $stmt1->fetchAll(),
@@ -231,12 +242,47 @@ class KlientaiController extends AbstractController
         /**
          * @Route("/klientai/priminti", name="app_klientaiPriminti")
          */
-        public function priminti()
+        public function priminti(Request $request, \Swift_Mailer $mailer)
         {
 
+$form = $this->createForm(PriminimoFormType::class);
+                $form->handleRequest($request);
 
-            return $this->render('klientai/priminti.html.twig', [
+                 if ($form->isSubmitted() && $form->isValid())
+                                {
+                                    $data = $form->getData();
 
-            ]);
+                                    $message = (new \Swift_Message('Priminimas apie egzaminą'))
+                                        ->setFrom('sentinelisko@gmail.com')
+                                        ->setTo($data['Kam'])
+                                        ->setBody(
+                                            $this->renderView(
+                                                'klientai/laisko_forma.html.twig',
+                                                ['data' => $data]
+                                            ),
+                                            'text/html'
+                                        )
+                                    ;
+
+                                    //dd($message);
+                                    $mailer->send($message);
+
+                                    $this->addFlash('success', 'Laiškas sėkmingai išsiųstas');
+                                    return $this->redirectToRoute('app_egzaminai');
+                                }
+           return $this->render('klientai/siusti_laiska.html.twig', [
+                               'form' => $form->createView()
+                           ]);
+
+
         }
+
+        /**
+                 * @Route("/klientai/primintiegz/{klientasEmail}/{egzName}/{egzDate}", name="app_klientaiPrimintiegz")
+                 */
+                public function primintiegz($klientasEmail,$egzName,$egzDate,Request $request, \Swift_Mailer $mailer)
+                {
+
+}
+
 }
