@@ -44,9 +44,9 @@ class AutomobilisRepository extends ServiceEntityRepository
                 transporto_priemone
             INNER JOIN pavaru_deze ON pavaru_deze.id = transporto_priemone.pavaru_deze
             INNER JOIN transporto_priemones_busena ON transporto_priemones_busena.id = transporto_priemone.busena
-            INNER JOIN modelis ON modelis.id = transporto_priemone.fk_modelis
+            INNER JOIN modelis ON modelis.id = transporto_priemone.modelis
             INNER JOIN marke ON marke.id = modelis.fk_marke_id
-            LEFT JOIN filialas ON fk_filialas = filialas.id
+            LEFT JOIN filialas ON filialas = filialas.id
                 ORDER BY id';
             $stmt = $conn->prepare($sql);
             $stmt->execute();
