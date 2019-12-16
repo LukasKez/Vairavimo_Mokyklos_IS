@@ -29,7 +29,7 @@
                 <td>{{ automobilis1.getTransportoPriemonesBusena.pavadinimas }}</td>
                 <td>{{ automobilis1.getPavaruDeze.pavadinimas    }}</td>
                 <td>{{ automobilis1.getKebulas }}</td>
-                <td>{{ automobilis1.getFilialas.adresas }}</td>
+                <td>{{ automobilis1.getFilialas.pavadinimas }}</td>
                 <td>
                     {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('app_automobiliaiVieta', {'id':automobilis1.id}) }}" class="btn btn-success btn-sm">Rodyti buvimo vietą</a>

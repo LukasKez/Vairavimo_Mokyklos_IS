@@ -87,3 +87,14 @@
     {% endif %}
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('.js-delete-btn').on('click', function () {
+                return confirm('Ar tikrai norite ištrinti klientą?');
+            });
+        });
+    </script>
+{% endblock %}

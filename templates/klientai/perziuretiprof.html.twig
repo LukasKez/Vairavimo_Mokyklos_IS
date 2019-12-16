@@ -8,12 +8,6 @@
 
     {% if is_granted('ROLE_ADMIN') %}
         <a href="{{ path('app_klientaiRedaguoti', {'klientasID':klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
-    {%  elseif is_granted('ROLE_KLIENTAS')%}
-        <a href="{{ path('app_klientaiRedaguoti', {'klientasID':app.user.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
-
-    {% if is_granted('ROLE_KLIENTAS') %}
-        <a href="{{ path('app_klientaiRedaguoti', {'klientasID': klientas.id}) }}" class="btn btn-sm btn-primary">Redaguoti</a>
-
     {% endif %}
 
     <table class="table" style="width:30%">

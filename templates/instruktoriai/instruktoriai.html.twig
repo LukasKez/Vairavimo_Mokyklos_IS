@@ -24,7 +24,6 @@
                 <td>{{ instruktorius.pavarde }}</td>
                 <td>
                     <a href="{{ path('app_instruktoriaiProfilis', {'insId':instruktorius.id}) }}" class="btn btn-success">Peržiūrėti profilį</a>
-                    <a href="{{ path('app_instruktoriaiRedaguoti', {'insId':instruktorius.id}) }}" class="btn btn-primary">Redaguoti</a>
                     <a href="{{ path('app_instruktoriaiIstrinti', {'insId':instruktorius.id}) }}" class="btn btn-danger js-delete-btn">Ištrinti</a>
                 </td>
             </tr>
@@ -86,4 +85,15 @@
             </tr>
         </table>
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('.js-delete-btn').on('click', function () {
+                return confirm('Ar tikrai norite ištrinti instruktorių?');
+            });
+        });
+    </script>
 {% endblock %}

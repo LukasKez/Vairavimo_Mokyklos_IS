@@ -13,6 +13,7 @@ use App\Form\InstruktoriaiRedaguotiFormType;
 use App\Form\InstruktoriausTvarkarastisFormType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Naudotojas;
+use App\Entity\Algalapis;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class InstruktoriaiController extends AbstractController
@@ -108,7 +109,7 @@ class InstruktoriaiController extends AbstractController
      */
     public function edit($insId, Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_INSTRUKTORIUS');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->find($insId);
         $form = $this->createForm(InstruktoriaiRedaguotiFormType::class, $instruktorius);
@@ -241,6 +242,24 @@ class InstruktoriaiController extends AbstractController
             $row1 = $stmt1->fetch();
 
             $alga = $row['laikas'] * 15 + $row1['kiekis'] * 20;
+
+            $instruktorius = $this->getDoctrine()->getRepository(Instruktorius::class)->findOneBy(['naudotojo_id' => $this->getUser()]);
+            $tvarkarastis = $this->getDoctrine()->getRepository(InstruktoriausTvarkarastis::class)->findOneBy(['instruktorius' => $instruktorius, 'pabaiga' => null]);
+            $algalapis = new Algalapis();
+            $algalapis->setInstruktorius($instruktorius);
+            $algalapis->setTvarkarastis($tvarkarastis);
+            $algalapis->setData(new \DateTime());
+            if($row['laikas'] != null){
+                $algalapis->setDirbtosValandos($row['laikas']);
+            } else {
+                $algalapis->setDirbtosValandos(0);
+            }
+            $algalapis->setValandinisUzmokestis(15);
+            $algalapis->setAtlyginimas($alga);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($algalapis);
+            $entityManager->flush();
+
             return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
                 'menuo' => $month,
                 'laikas' => $row['laikas'],

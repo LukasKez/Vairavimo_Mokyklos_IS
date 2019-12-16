@@ -163,7 +163,8 @@ class AutomobiliaiController extends AbstractController
           if($fil != null)
           {
               $automobilis = $entityManager->getRepository(TransportoPriemone::class)->find($id);
-              $automobilis->setFilialas($filialoID);
+              $filialas = $entityManager->getRepository(Filialas::class)->find($filialoID);
+              $automobilis->setFilialas($filialas);
               $entityManager->flush();
               $this->addFlash('success', 'Automobiliui pakeistas filialas');
               return $this->redirectToRoute('app_automobiliai');

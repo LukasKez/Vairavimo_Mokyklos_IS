@@ -77,15 +77,13 @@ class EgzaminaiController extends AbstractController
 
             foreach ($klientoTvarkarasciai as $tvarkarastis){
                 $id = $tvarkarastis->getKlientas()->getId();
-                $pabaiga = $tvarkarastis->getPabaiga();
-                if($data['Klientas']->getId() == $id && $pabaiga == null){
+                if($data['Klientas']->getId() == $id){
                     $klientoTvarkarastis = $tvarkarastis;
                 }
             }
             foreach ($instruktoriausTvarkarasiai as $tvarkarastis){
                 $id = $tvarkarastis->getInstruktorius()->getId();
-                $pabaiga = $tvarkarastis->getPabaiga();
-                if($data['Instruktorius']->getId() == $id && $pabaiga == null){
+                if($data['Instruktorius']->getId() == $id){
                     $instruktoriausTvarkarastis = $tvarkarastis;
                 }
             }
@@ -103,6 +101,7 @@ class EgzaminaiController extends AbstractController
             if($instruktoriausTvarkarastis == null){
                 $instruktoriausTvarkarastis = new InstruktoriausTvarkarastis();
                 $instruktoriausTvarkarastis->setPradzia($date);
+                $instruktoriausTvarkarastis->setPabaiga($date->modify('+30 day'));
                 $instruktoriausTvarkarastis->setInstruktorius($data['Instruktorius']);
                 $entityManager->persist($instruktoriausTvarkarastis);
             }

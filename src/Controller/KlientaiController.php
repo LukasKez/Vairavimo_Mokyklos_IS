@@ -168,27 +168,13 @@ class KlientaiController extends AbstractController
     public function edit($klientasID, Request $request)
     {
 
-        //$this->denyAccessUnlessGranted('ROLE_ADMIN');
-        if(in_array('ROLE_ADMIN', $this->getUser()->getRoles()))
-        {
-
-
-        $this->denyAccessUnlessGranted('ROLE_KLIENTAS');
-
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $klientas = $this->getDoctrine()
             ->getRepository(Klientas::class)
             ->find($klientasID);
-            }
-            else if(in_array('ROLE_KLIENTAS', $this->getUser()->getRoles()))
-            {
 
-             $klientas = $this->getDoctrine()
-             ->getRepository(Klientas::class)
-             ->findOneBy(['naudotojo_id' => $klientasID]);
-             }
-            $form = $this->createForm(KlientaiRedaguotiFormType::class, $klientas);
-                    $form->handleRequest($request);
-
+        $form = $this->createForm(KlientaiRedaguotiFormType::class, $klientas);
+        $form->handleRequest($request);
 
 
         if ($form->isSubmitted() && $form->isValid())
