@@ -189,8 +189,7 @@ class InstruktoriaiController extends AbstractController
 
        $conn = $this->getDoctrine()->getManager()->getConnection();
 
-       $sql = "SELECT * FROM instruktoriaus_tvarkarastis 
-                WHERE instruktorius in (SELECT id from instruktorius where instruktoriaus_tvarkarastis.instruktorius = '$insId')";
+       $sql = "SELECT * FROM pravaziavimas where instruktoriaus_tvarkarastis = (SELECT id from instruktoriaus_tvarkarastis where id = pravaziavimas.instruktoriaus_tvarkarastis AND instruktorius = '$insId')";
         $sql1 = "SELECT * FROM instruktoriaus_tvarkarastis 
                 JOIN instruktoriaus_tvarkarascio_egzaminas ON instruktoriaus_tvarkarastis_id = instruktoriaus_tvarkarastis.id
                 JOIN egzaminas ON instruktoriaus_tvarkarascio_egzaminas.egzaminas_id = egzaminas.id
@@ -205,7 +204,7 @@ class InstruktoriaiController extends AbstractController
         return $this->render('instruktoriai/tvarkarastis.html.twig', [
             'pravaziavimai' => $stmt->fetchAll(),
             'egzaminai' => $stmt1->fetchAll(),
-            'tvark' => $tvarkarastis
+            'tvarks' => $tvarkarastis
         ]);
     }
 
@@ -225,7 +224,8 @@ class InstruktoriaiController extends AbstractController
 
             $conn = $this->getDoctrine()->getManager()->getConnection();
       
-            $sql = "SELECT SUM(HOUR(TIMEDIFF(pradzia, pabaiga))) as laikas FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId' AND MONTH(pradzia) = MONTH('$menuo')";
+            //$sql = "SELECT SUM(HOUR(TIMEDIFF(pradzia, pabaiga))) as laikas FROM instruktoriaus_tvarkarastis WHERE instruktorius = '$insId' AND MONTH(pradzia) = MONTH('$menuo')";
+            $sql = "SELECT COUNT(*) as pravaziavimai FROM pravaziavimas where instruktoriaus_tvarkarastis = (SELECT id from instruktoriaus_tvarkarastis where id = pravaziavimas.instruktoriaus_tvarkarastis AND instruktorius = '$insId') AND MONTH(pravaziavimas.data) = MONTH('$menuo')";
             $sql1 = "SELECT COUNT(*) as kiekis FROM instruktoriaus_tvarkarascio_egzaminas 
                     WHERE instruktoriaus_tvarkarastis_id in 
                     (SELECT id FROM instruktoriaus_tvarkarastis WHERE instruktorius = 
@@ -240,10 +240,10 @@ class InstruktoriaiController extends AbstractController
             $row = $stmt->fetch();
             $row1 = $stmt1->fetch();
 
-            $alga = $row['laikas'] * 15 + $row1['kiekis'] * 20;
+            $alga = $row['pravaziavimai'] * 15 + $row1['kiekis'] * 20;
             return $this->render('instruktoriai/algos-skaiciavimas.html.twig', [
                 'menuo' => $month,
-                'laikas' => $row['laikas'],
+                'laikas' => $row['pravaziavimai'],
                 'alga' => $alga,
                 'egz' => $row1['kiekis']
             ]);
