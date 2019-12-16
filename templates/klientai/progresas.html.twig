@@ -11,14 +11,18 @@
 
         <h5>Važiavimų balai:
         </h5>
-
+        {% set count = 0 %}
+        {% set vid = 0 %}
             {% for pravaziavimas in pravaziavimai %}
                 {{pravaziavimas.data|date("Y-m-d H:i") }}
                 balas:
                 {{ pravaziavimas.ivertinimas }}
+                {% set count = count + pravaziavimas.ivertinimas %}
                 <div></div>
             {% endfor %}
-
+        {% set vid = count/pravaziavimai|length%}
+      Pravažiavimų kiekis: {{ pravaziavimai|length }}
+        <div> Jūsų įvertinimų vidurkis: {{ vid }}</div>
 
 
 
