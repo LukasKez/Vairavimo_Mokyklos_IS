@@ -26,7 +26,6 @@
                     <a class="nav-item nav-link" href="{{ path('app_egzaminai') }}">Egzaminai</a>
                     <a class="nav-item nav-link" href="{{ path('app_perziuretiTaisykles') }}">Taisyklės</a>
                     <a class="nav-item nav-link" href="{{ path('app_logout') }}">Atsijungti</a>
-
                 {% elseif is_granted("ROLE_KLIENTAS") %}
                     <a class="nav-item nav-link" href="{{ path('app_klientai') }}">Kliento informacija</a>
                     <a class="nav-item nav-link" href="{{ path('app_instruktoriai') }}">Instruktoriai</a>

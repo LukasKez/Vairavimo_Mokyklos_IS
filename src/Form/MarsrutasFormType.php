@@ -12,7 +12,9 @@ class MarsrutasFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nuoroda')
+            ->add('nuoroda', null, [
+                'help' => 'Google maps maršruto nuoroda',
+            ])
         ;
     }
 
