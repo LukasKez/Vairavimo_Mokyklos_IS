@@ -212,7 +212,7 @@ class KlientaiController extends AbstractController
                         ->findAll();
 
             $conn = $this->getDoctrine()->getManager()->getConnection();
-
+            
             $sql = "SELECT * FROM kliento_tvarkarastis 
                     JOIN pravaziavimas ON pravaziavimas.kliento_tvarkarastis = kliento_tvarkarastis.id
                         WHERE klientas = '$naudotojas'";

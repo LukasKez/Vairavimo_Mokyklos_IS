@@ -12,8 +12,8 @@
     <table class="table">
     
         <tr>
-            <th>Pravažiavimo pradzia</th>
-            <th>Pravažiavimo pabaiga</th>
+            <th>Pravažiavimo data</th>
+            <th>Įvertinimas</th>
 
         </tr>
 
@@ -21,8 +21,8 @@
             {% for pravaziavimas in pravaziavimai %}
             <tr>
             
-            <td>{{ pravaziavimas.pradzia|date("Y-m-d H:i") }}</td>
-            <td style="text-align: left">{{ pravaziavimas.pabaiga|date("Y-m-d H:i") }}</td>
+            <td>{{ pravaziavimas.data|date("Y-m-d H:i") }}</td>
+            <td style="text-align: left">{{ pravaziavimas.ivertinimas }}</td>
 
             </tr>
             {% endfor %}
