@@ -30,6 +30,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function index()
     {
+  	    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 	    $transportoPriemones = $this->getDoctrine()->getRepository(TransportoPriemone::class)->AutomobilisInfo();
         return $this->render('automobiliai/automobiliai.html.twig',
         array(
@@ -42,6 +43,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function add(Request $request)
     {
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $modeliai = $this->getDoctrine()->getRepository(Modelis::class)->findAll();
         $busenos = $this->getDoctrine()->getRepository(TransportoPriemonesBusena::class)->findAll();
         $pavaru_dezes = $this->getDoctrine()->getRepository(PavaruDeze::class)->findAll();
@@ -89,21 +91,27 @@ class AutomobiliaiController extends AbstractController
               if($er == '')
               {
                   $naujas_automobilis = new TransportoPriemone();
-                  $naujas_automobilis->setModelis($automobilis);
+                  $naujas_automobilis->setModelis($auto);
                   $naujas_automobilis->setValstybiniaiNr($valstybiniaiNr);
                   $naujas_automobilis->setPagaminimoMetai($metai);
-                  $naujas_automobilis->setBusena((int)$_POST['busena']);
-                  $naujas_automobilis->setPavaruDeze((int)$_POST['pavaruDeze']);
+				  
+                  $busena1 = $this->getDoctrine()->getRepository(TransportoPriemonesBusena::class)->find((int)$_POST['busena']);
+                  $naujas_automobilis->setTransportoPriemonesBusena($busena1);
+				  
+				  $deze1 = $this->getDoctrine()->getRepository(PavaruDeze::class)->find((int)$_POST['pavaruDeze']);
+                  $naujas_automobilis->setPavaruDeze($deze1);
 
                   $naujas_automobilis->setIlguma(floatval($_POST['ilguma']));
                   $naujas_automobilis->setPlokstuma(floatval($_POST['platuma']));
 
                   $naujas_automobilis->setKebulas($kebulas);
                   $naujas_automobilis->setKategorija($kategorija);				
-                  $naujas_automobilis->setKategorija($kategorija);				  
-
+				  
 				  if((int)$_POST['filialas'] != '')
-					$naujas_automobilis->setFilialas((int)$_POST['filialas']);				  					  
+				  {
+					$filialas1 = $this->getDoctrine()->getRepository(Filialas::class)->find((int)$_POST['filialas']);
+					$naujas_automobilis->setFilialas($filialas1);				  					  
+				  }
 
                   $entityManager->persist($naujas_automobilis);
 
@@ -132,6 +140,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function condition($id, Request $request)
     {
+		$this->denyAccessUnlessGranted(['ROLE_INSTRUKTORIUS', 'ROLE_ADMIN']);
         $form = $this->createForm(AutomobilioBusenosType::class);
         $form->handleRequest($request);
 
@@ -148,11 +157,10 @@ class AutomobiliaiController extends AbstractController
               }
               else
               {
-
-              $automobilis->setBusena($busena);
-              $entityManager->flush();
-              $this->addFlash('success', 'Automobilio būsena pakeista');
-               return $this->redirectToRoute('app_automobiliai');
+				  $automobilis->setTransportoPriemonesBusena($busena1);
+				  $entityManager->flush();
+				  $this->addFlash('success', 'Automobilio būsena pakeista');
+		   	      return $this->redirectToRoute('app_automobiliai');
              }
 
           }
@@ -169,6 +177,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function changeBranch($id, Request $request)
     {
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(KeistiFilialaFormType::class);
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -187,7 +196,7 @@ class AutomobiliaiController extends AbstractController
 			if($fil != null)
 			{
 				  $automobilis = $entityManager->getRepository(TransportoPriemone::class)->find($id);
-				  $automobilis->setFilialas($filialoID);
+				  $automobilis->setFilialas($fil);
 				  $entityManager->flush();
 				  $this->addFlash('success', 'Automobiliui pakeistas filialas');
 				  return $this->redirectToRoute('app_automobiliai');
@@ -209,6 +218,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function auto_position($id)
     {
+		$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $automobilis = $this->getDoctrine()->getRepository(TransportoPriemone::class)->find($id);
         return $this->render('automobiliai/vieta.html.twig', [
         'automobilis' => $automobilis
@@ -220,6 +230,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function delete($id)
     {
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $a = $this->getDoctrine()->getRepository(TransportoPriemone::class)->find($id);
         if ($a != null)
         {
