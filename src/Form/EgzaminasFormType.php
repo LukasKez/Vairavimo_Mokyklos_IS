@@ -22,9 +22,11 @@ class EgzaminasFormType extends AbstractType
             ->add('EgzaminoTipas', EntityType::class, [
                 'class' => EgzaminuTipai::class,
                 'choice_label' => 'name',
+                'label' => 'Egzamino tipas'
             ])
-            ->add('data_ir_laikas', DateTimeType::class, [
-                'required'=>'true'
+            ->add('data', DateTimeType::class, [
+                'required'=>'true',
+                'label' => 'Data ir laikas'
             ])
             ->add('adresas')
         ;
@@ -33,7 +35,7 @@ class EgzaminasFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            
+            'data_class' => Egzaminas::class
         ]);
     }
 }

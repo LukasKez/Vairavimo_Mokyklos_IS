@@ -98,15 +98,24 @@ class EgzaminaiController extends AbstractController
                 $klientoTvarkarastis->setVairavimuSkaicius(0);
                 $entityManager->persist($klientoTvarkarastis);
             }
+            $date = new \DateTime();
             if($instruktoriausTvarkarastis == null){
                 $instruktoriausTvarkarastis = new InstruktoriausTvarkarastis();
                 $instruktoriausTvarkarastis->setPradzia($date);
-                $instruktoriausTvarkarastis->setPabaiga($date->modify('+30 day'));
+                $instruktoriausTvarkarastis->setPabaiga(new \DateTime('now +30 day'));
                 $instruktoriausTvarkarastis->setInstruktorius($data['Instruktorius']);
                 $entityManager->persist($instruktoriausTvarkarastis);
             }
+            $egzistuoja = $egzaminas->addKlientoEgzaminas($klientoTvarkarastis);
+            if($egzistuoja == -1){
+                return $this->render('egzaminai/itraukti_egzamina.html.twig', [
+                    'form' => $form->createView(),
+                    'error' => 'Egzaminas jau yra priskirtas šiam klientui.'
+                ]);
+            }
             $egzaminas->addKlientoEgzaminas($klientoTvarkarastis);
             $egzaminas->addInstruktoriausEgzaminas($instruktoriausTvarkarastis);
+
             $entityManager->persist($egzaminas);
             $entityManager->flush();
 
@@ -131,11 +140,14 @@ class EgzaminaiController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $data = $form->getData();
-            $egzaminas = new Egzaminas();
-            $egzaminas->setEgzaminoTipas($data['EgzaminoTipas']);
-            $egzaminas->setData($data['data_ir_laikas']);
-            $egzaminas->setAdresas($data['adresas']);
+            $egzaminas = $form->getData();
+            $date = new \DateTime();
+            if($egzaminas->getData() < $date){
+                return $this->render('egzaminai/prideti_egzamina.html.twig', [
+                    'form' => $form->createView(),
+                    'error' => 'Data turi būti didesnė negu šiandienos data.'
+                ]);
+            }
             
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($egzaminas);
@@ -158,15 +170,19 @@ class EgzaminaiController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $egzaminas = $this->getDoctrine()->getRepository(Egzaminas::class)->find($slug);
-        $form = $this->createForm(EgzaminasFormType::class);
+        $form = $this->createForm(EgzaminasFormType::class, $egzaminas);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $data = $form->getData();
-            $egzaminas->setEgzaminoTipas($data['EgzaminoTipas']);
-            $egzaminas->setData($data['data_ir_laikas']);
-            $egzaminas->setAdresas($data['adresas']);
+            $egzaminas = $form->getData();
+            $date = new \DateTime();
+            if($egzaminas->getData() < $date){
+                return $this->render('egzaminai/redaguoti_egzamina.html.twig', [
+                    'form' => $form->createView(),
+                    'error' => 'Data turi būti didesnė negu šiandienos data.'
+                ]);
+            }
             
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($egzaminas);

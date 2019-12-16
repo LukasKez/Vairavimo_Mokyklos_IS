@@ -20,6 +20,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
+
+
+
 class AutomobiliaiController extends AbstractController
 {
     /**
@@ -27,13 +30,11 @@ class AutomobiliaiController extends AbstractController
      */
     public function index()
     {
-      $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-		    $transportoPriemones = $this->getDoctrine()->getRepository(TransportoPriemone::class)->findAll();
-
+  	    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+	    $transportoPriemones = $this->getDoctrine()->getRepository(TransportoPriemone::class)->AutomobilisInfo();
         return $this->render('automobiliai/automobiliai.html.twig',
         array(
           'transporto_priemones' => $transportoPriemones,
-
       ));
     }
 
@@ -42,67 +43,94 @@ class AutomobiliaiController extends AbstractController
      */
     public function add(Request $request)
     {
-      $this->denyAccessUnlessGranted('ROLE_ADMIN');
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $modeliai = $this->getDoctrine()->getRepository(Modelis::class)->findAll();
+        $busenos = $this->getDoctrine()->getRepository(TransportoPriemonesBusena::class)->findAll();
+        $pavaru_dezes = $this->getDoctrine()->getRepository(PavaruDeze::class)->findAll();
+        $filialai = $this->getDoctrine()->getRepository(Filialas::class)->findAll();
 
-          $form = $this->createForm(AutomobiliaiType::class);
-          $request = Request::createFromGlobals();
-          $rez = $request->get('automobiliai');
-
-            if (!empty($request->get('patvirtinti')))
-            {
-              var_dump($rez);
-              $entityManager = $this->getDoctrine()->getManager();
-              $pagaminimo_metai = (int)$rez['pagaminimo_metai'];
-              $busena = (int)$rez['busena'];
-              $automobilio_modelis = (int)$rez['modelis'];
-              $pavaru_deze = (int)$rez['pavaru_deze'];
+          if (!empty($request->get('patvirtinti')))
+          {
               $er = '';
+              $entityManager = $this->getDoctrine()->getManager();
 
-              if($automobilio_modelis==0 || empty($rez['valstybiniai_nr']) ||
-               $pagaminimo_metai == 0 || $busena == 0 || $pavaru_deze == 0 ||
-               empty($rez['kebulas']) || empty($rez['kategorija']))
-               {
-                  $klaida = "Neteisingai užpildyti laukeliai";
-               }
+              $automobilis = (int) $_POST['automobilis'];
+              $auto = $this->getDoctrine()->getRepository(Modelis::class)->find($automobilis);
 
-               $automobilio_modelis = $this->getDoctrine()->getRepository(Modelis::class)->findOneBy(['id' => $automobilio_modelis]);
-               $busena = $this->getDoctrine()->getRepository(TransportoPriemonesBusena::class)->findOneBy(['id' => $busena]);
-               $pavaru_deze = $this->getDoctrine()->getRepository(PavaruDeze::class)->findOneBy(['id' => $pavaru_deze]);
-               $filialas = $this->getDoctrine()->getRepository(Filialas::class)->findOneBy(['id' => (int)$rez['filialas']]);
-               
-               if($er == '')
-               {
-                  $automobilis = new TransportoPriemone();
-                  $automobilis->setModelis($automobilio_modelis);
-                  $automobilis->setValstybiniaiNr($rez['valstybiniai_nr']);
-                  $automobilis->setPagaminimoMetai($pagaminimo_metai);
-                  $automobilis->setTransportoPriemonesBusena($busena);
-                  $automobilis->setPavaruDeze($pavaru_deze);
-                  $automobilis->setFilialas($filialas);
+              if($automobilis == -1 || $auto == '')
+                  $er = "Reikia pasirinkti automobilį";
 
-                  $automobilis->setIlguma(floatval($rez['ilguma']));
-                  $automobilis->setPlokstuma(floatval($rez['plokstuma']));
+              $valstybiniaiNr = $_POST['vnr'];
+              if($valstybiniaiNr == '' || strlen($valstybiniaiNr) != 7)
+                  $er = "Valstybinių numerių ilgis turi būti sudarytas iš 7 simbolių: pvz AAA 000";
 
-                  $automobilis->setKebulas($rez['kebulas']);
-                  $automobilis->setKategorija($rez['kategorija']);
+              $metai = (int) $_POST['pagaminimo_metai'];
+              if($metai > date("Y") || strlen($metai) != 4)
+                  $er = "Pagaminimo metai įvesti neteisingai";
 
-                  $entityManager->persist($automobilis);
+              if((int)$_POST['busena'] == '')
+                      $er = "Pasirinkite būseną";
+
+              if((int)$_POST['pavaruDeze'] == '')
+                $er = "Pasirinkite pavarų dėžę";
+
+              if((int)$_POST['busena'] == '')
+                      $er = "Pasirinkite būseną";
+
+              $kategorija = $_POST['kategorija'];
+              $kebulas = $_POST['kebulas'];
+              if($kebulas == '' || $kategorija == '')
+                  $er = "Užpildyti ne visi laukeliai";
+
+              $nr = $this->getDoctrine()->getRepository(TransportoPriemone::class)->findOneBy(['valstybiniai_nr' => $valstybiniaiNr]);
+
+              if($nr)
+                  $er = "Automobilis su tokiais valstybiniais numeriais jau yra";
+
+
+              if($er == '')
+              {
+                  $naujas_automobilis = new TransportoPriemone();
+                  $naujas_automobilis->setModelis($auto);
+                  $naujas_automobilis->setValstybiniaiNr($valstybiniaiNr);
+                  $naujas_automobilis->setPagaminimoMetai($metai);
+				  
+                  $busena1 = $this->getDoctrine()->getRepository(TransportoPriemonesBusena::class)->find((int)$_POST['busena']);
+                  $naujas_automobilis->setTransportoPriemonesBusena($busena1);
+				  
+				  $deze1 = $this->getDoctrine()->getRepository(PavaruDeze::class)->find((int)$_POST['pavaruDeze']);
+                  $naujas_automobilis->setPavaruDeze($deze1);
+
+                  $naujas_automobilis->setIlguma(floatval($_POST['ilguma']));
+                  $naujas_automobilis->setPlokstuma(floatval($_POST['platuma']));
+
+                  $naujas_automobilis->setKebulas($kebulas);
+                  $naujas_automobilis->setKategorija($kategorija);				
+				  
+				  if((int)$_POST['filialas'] != '')
+				  {
+					$filialas1 = $this->getDoctrine()->getRepository(Filialas::class)->find((int)$_POST['filialas']);
+					$naujas_automobilis->setFilialas($filialas1);				  					  
+				  }
+
+                  $entityManager->persist($naujas_automobilis);
 
                   $entityManager->flush();
-                  $this->addFlash('success', 'Automobilis pridėtas');
+                    $this->addFlash('success', "Automobilis pridėtas sėkmingai");
                   return $this->redirectToRoute('app_automobiliai');
-                }
-                else
-                {
-                  $this->addFlash('warning', $er);
-                }
-            }
+              }
+              else {
+                $this->addFlash('danger', $er);
+              }
+          }
 
         return $this->render('automobiliai/prideti.html.twig', [
           'purpose' => 'Pridėti',
-          'form' => $form->createView(),
-          'modeliai' => $modeliai
+          'modeliai' => $modeliai,
+          'busenos'=>$busenos,
+          'pavaru_dezes' => $pavaru_dezes,
+          'filialai' => $filialai,
+          'postas' => $_POST
       ]);
 
     }
@@ -112,7 +140,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function condition($id, Request $request)
     {
-        $this->denyAccessUnlessGranted(['ROLE_INSTRUKTORIUS', 'ROLE_ADMIN']);
+		$this->denyAccessUnlessGranted(['ROLE_INSTRUKTORIUS', 'ROLE_ADMIN']);
         $form = $this->createForm(AutomobilioBusenosType::class);
         $form->handleRequest($request);
 
@@ -129,11 +157,10 @@ class AutomobiliaiController extends AbstractController
               }
               else
               {
-              $automobilis->setTransportoPriemonesBusena($busena1);
-              $entityManager->persist($automobilis);
-              $entityManager->flush();
-              $this->addFlash('success', 'Automobilio būsena pakeista');
-               return $this->redirectToRoute('app_automobiliai');
+				  $automobilis->setTransportoPriemonesBusena($busena1);
+				  $entityManager->flush();
+				  $this->addFlash('success', 'Automobilio būsena pakeista');
+		   	      return $this->redirectToRoute('app_automobiliai');
              }
 
           }
@@ -150,29 +177,34 @@ class AutomobiliaiController extends AbstractController
      */
     public function changeBranch($id, Request $request)
     {
-      $this->denyAccessUnlessGranted('ROLE_ADMIN');
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(KeistiFilialaFormType::class);
         $entityManager = $this->getDoctrine()->getManager();
-        $filialoID = (int)$request->get("keisti_filiala_form")['pavadinimas'];
+
+        $filialoID1 = $request->get("keisti_filiala_form");
         $filialas = $entityManager->getRepository(TransportoPriemone::class)->find($id);
 
 
         if (!empty($request->get('keistiFiliala')))
         {
-          $fil = $entityManager->getRepository(Filialas::class)->find($filialoID);
-          if($fil != null)
-          {
-              $automobilis = $entityManager->getRepository(TransportoPriemone::class)->find($id);
-              $filialas = $entityManager->getRepository(Filialas::class)->find($filialoID);
-              $automobilis->setFilialas($filialas);
-              $entityManager->flush();
-              $this->addFlash('success', 'Automobiliui pakeistas filialas');
-              return $this->redirectToRoute('app_automobiliai');
-          }
-          else
-          {
-              $this->addFlash('danger', 'Pasirinktas netinkamas filialas');
-          }
+			$fil = null;
+			if(count($filialoID1) != 1)
+				$filialoID = (int)$filialoID1['pavadinimas'];				
+				
+			$fil = $entityManager->getRepository(Filialas::class)->find($filialoID);
+
+			if($fil != null)
+			{
+				  $automobilis = $entityManager->getRepository(TransportoPriemone::class)->find($id);
+				  $automobilis->setFilialas($fil);
+				  $entityManager->flush();
+				  $this->addFlash('success', 'Automobiliui pakeistas filialas');
+				  return $this->redirectToRoute('app_automobiliai');
+			  }
+			  else
+			  {
+				  $this->addFlash('danger', 'Pasirinktas netinkamas filialas');
+			  }
         }
 
           return $this->render('automobiliai/keistiFiliala.html.twig', [
@@ -186,10 +218,9 @@ class AutomobiliaiController extends AbstractController
      */
     public function auto_position($id)
     {
-      $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+		$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $automobilis = $this->getDoctrine()->getRepository(TransportoPriemone::class)->find($id);
         return $this->render('automobiliai/vieta.html.twig', [
-        'purpose' => 'Automobilio vieta',
         'automobilis' => $automobilis
         ]);
     }
@@ -199,7 +230,7 @@ class AutomobiliaiController extends AbstractController
      */
     public function delete($id)
     {
-      $this->denyAccessUnlessGranted('ROLE_ADMIN');
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $a = $this->getDoctrine()->getRepository(TransportoPriemone::class)->find($id);
         if ($a != null)
         {

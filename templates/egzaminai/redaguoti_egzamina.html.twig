@@ -7,7 +7,11 @@
         <span>&#10229;</span> Grįžti atgal</a>
     <h1>Redaguoti egzaminą</h1>
     <br/>
-
+     {% if error is defined %}
+        <div class="alert alert-danger">
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
         <div class="panel panel-default">
             <div class="panel-body">
                 {{ form_start(form) }}

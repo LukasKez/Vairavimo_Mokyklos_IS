@@ -121,7 +121,7 @@ class Egzaminas
 
     public function addKlientoEgzaminas(KlientoTvarkarastis $tvarkarastis){
         if ($this->kliento_tvarkarascio_egzaminas->contains($tvarkarastis)) {
-            return;
+            return -1;
         }
         $this->kliento_tvarkarascio_egzaminas[] = $tvarkarastis;
     }

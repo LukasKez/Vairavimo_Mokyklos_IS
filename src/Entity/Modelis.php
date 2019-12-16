@@ -1,11 +1,8 @@
 <?php
-
 namespace App\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ModelisRepository")
  */
@@ -17,17 +14,20 @@ class Modelis
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @ORM\Column(type="string", length=20)
      */
     private $pavadinimas;
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Marke", inversedBy="modelis")
      * @ORM\JoinColumn(nullable=false)
      */
     private $fk_marke;
+	
+	 /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TransportoPriemone", mappedBy="modelis")
+     */
+    private $transporto_priemones;
 
     public function getId(): ?int
     {
@@ -42,7 +42,6 @@ class Modelis
     public function setModelis(string $pavadinimas): self
     {
         $this->pavadinimas = $pavadinimas;
-
         return $this;
     }
 
@@ -54,7 +53,6 @@ class Modelis
     public function setMarke(?Marke $fk_marke): self
     {
         $this->fk_marke = $fk_marke;
-
         return $this;
     }
 
@@ -62,11 +60,6 @@ class Modelis
     {
         return $this->fk_marke. " ".$this->pavadinimas;
     }
-
-     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TransportoPriemone", mappedBy="modelis")
-     */
-    private $transporto_priemones;
 
     public function __construct()
     {
@@ -85,5 +78,4 @@ class Modelis
     {
         return $this->fk_marke->getPavadinimas()." ".$this->pavadinimas;
     }
-
 }
